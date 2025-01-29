@@ -9,17 +9,8 @@ function SaleList() {
   const [salesRecords, setSalesRecords] = useState([]);
   const [product_qrcode, setProductQrCode] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [discount, setDiscount] = useState(0);
-  const [items, setItems] = useState([]);
-  const [grandTotal, setGrandTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const [quantity, setQuantity] = useState(1); // Initializing quantity state
-  const [price, setPrice] = useState(0); // Initializing price state
-  const [description, setDescription] = useState(""); // Initializing description state
-
   // ? for datepicker
   const [selectedDate, setSelectedDate] = useState(null); // Initialize the date state
 
@@ -37,6 +28,7 @@ function SaleList() {
     }
   };
 
+  // ? Getting data by qrcode
   const handleQrCodeChange = async (e) => {
     const enteredQrcode = e.target.value.trim(); // Remove extra spaces
     setProductQrCode(enteredQrcode);
@@ -72,6 +64,7 @@ function SaleList() {
           totalPrice: 0, // Calculated based on quantity and price
           discount: 0,
           productQrcode: fetchedProduct.product_qrcode,
+          productId: fetchedProduct.id, // Assuming the product ID is available in fetchedProduct
         };
         setSalesRecords((prevRecords) => [...prevRecords, newSale]);
       }
@@ -86,7 +79,47 @@ function SaleList() {
     }
   };
 
-  // Update quantity or price dynamically
+  // ? salling items
+  const handleInsertSalesData = async () => {
+    try {
+      // Loop through each sales record
+      for (const record of salesRecords) {
+        const product_id = parseInt(record.productId, 10); // Ensure product_id is an integer
+
+        if (!product_id || isNaN(product_id)) {
+          console.error(
+            `Invalid product_id for record with productId: ${record.productId}`
+          );
+          continue; // Skip this record if product_id is invalid
+        }
+
+        const salesData = {
+          salling_date: new Date().toISOString().split("T")[0], // Current date
+          salling_quantity: record.quantity || 1,
+          salling_price: record.price || 0,
+          salling_discount: selectedProduct.discount || 0,
+          salling_description: selectedProduct.description || "",
+          salling_status: selectedProduct.status || "کاش",
+          product_id: selectedProduct.id, // Selected product ID
+        };
+
+        const response = await axios.post(
+          "http://localhost:4000/api/salling",
+          salesData
+        );
+
+        if (response.status === 200) {
+          console.log("Sale data inserted successfully:", response.data);
+        } else {
+          console.error("Error inserting sale data:", response.data);
+        }
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
+  };
+
+  //? Update quantity or price dynamically
   const handleInputChange = (index, field, value) => {
     const updatedRecords = [...salesRecords];
 
@@ -107,115 +140,8 @@ function SaleList() {
     setSalesRecords(updatedRecords);
   };
 
-  // ? salling items
-  const handleInsertSalesData = async () => {
-    if (!selectedDate) {
-      alert("Please select a date.");
-      return;
-    }
-
-    const formattedDate = selectedDate.toISOString().split("T")[0]; // Convert to 'YYYY-MM-DD'
-
-    const salesData = salesRecords.map((record) => ({
-      salling_date: formattedDate,
-      salling_quantity: record.quantity,
-      salling_price: record.price,
-      salling_discount: record.discount || 0,
-      salling_description: record.description || null,
-      salling_status: record.status || "Sale",
-      product_id: record.productId,
-      brand_id: record.brandId,
-      invoice_customer: record.customer || "Walk-in",
-    }));
-
-    try {
-      const response = await fetch("http://localhost:4000/api/salling", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sales: salesData }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        console.log("Sales data inserted successfully:", result);
-        setSalesRecords([]); // Clear sales records
-      } else {
-        console.error("Error inserting sales data:", result);
-        alert(result.msg || "Error inserting sales data.");
-      }
-    } catch (error) {
-      console.error("Error inserting sales data:", error);
-      alert("An error occurred while inserting sales data.");
-    }
-  };
-
-  // Function to update the price and calculate the total with discount
-  const handleDiscountChange = (e, index) => {
-    const discountValue = parseFloat(e.target.value) || 0;
-
-    const updatedRecords = salesRecords.map((record, idx) => {
-      if (idx === index) {
-        const discountedPrice = record.price * (1 - discountValue / 100);
-        return {
-          ...record,
-          discount: discountValue,
-          totalPrice: discountedPrice * record.quantity,
-        };
-      }
-      return record;
-    });
-
-    setSalesRecords(updatedRecords);
-  };
-
-  const calculateTotal = (price, quantity, discount, index) => {
-    if (isNaN(price) || isNaN(quantity) || price < 0 || quantity <= 0) {
-      setTotalPrice(0); // Reset if invalid
-      return;
-    }
-
-    const priceInCents = Math.round(price * 100);
-    const discountAmountInCents = Math.round(priceInCents * (discount / 100));
-    const discountedPriceInCents = priceInCents - discountAmountInCents;
-    const totalInCents = discountedPriceInCents * quantity;
-
-    const total = totalInCents / 100;
-
-    // Check if the total price is below the purchase price
-    if (
-      selectedProduct &&
-      totalInCents < selectedProduct.purchase_price * quantity * 100
-    ) {
-      alert(
-        "Discount not allowed: Total sale price is less than the purchase price."
-      );
-      setDiscount(0); // Reset discount
-      setTotalPrice(price * quantity); // Reset total price to without discount
-      return;
-    }
-
-    // Update the specific item's total in the items array
-    const updatedItems = [...items];
-    updatedItems[index] = total;
-    setItems(updatedItems);
-
-    // Recalculate the grand total
-    const newGrandTotal = updatedItems.reduce((sum, item) => sum + item, 0);
-    setGrandTotal(newGrandTotal);
-
-    setTotalPrice(total); // Set the calculated total price
-  };
-
   const totalQuantity = salesRecords.reduce(
     (sum, record) => sum + (parseFloat(record.quantity) || 0),
-    0
-  );
-
-  const grandTotals = salesRecords.reduce(
-    (sum, record) => sum + (parseFloat(record.totalPrice) || 0),
     0
   );
 
@@ -453,11 +379,13 @@ function SaleList() {
                     </td>
                     <td className="px-8 py-2 text-sm text-right">
                       <input
-                        value={sale.quantity}
+                        value={sale.quantity} // Ensure there's a default value in case quantity is undefined
                         onChange={(e) =>
                           handleInputChange(index, "quantity", e.target.value)
                         }
                         className="w-24 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                        type="number" // Ensure the input accepts only numbers
+                        min="1" // Ensure the minimum value is 1
                       />
                     </td>
                     <td className="py-2 text-sm text-right">
