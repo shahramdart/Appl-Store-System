@@ -119,7 +119,6 @@ const ExpensesList = () => {
             <tbody>
               {filteredExpenses.map((expenses, index) => (
                 <>
-                  {" "}
                   <tr
                     key={`${expenses.uuid}-${expenses.product_name}`}
                     className="text-gray-900"

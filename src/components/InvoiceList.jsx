@@ -150,18 +150,6 @@ const InvoiceLists = () => {
             </tbody>
 
             {/* Invoice Totals after discount */}
-            <tbody className="h-8 bg-gray-200 mt-10 pt-2 border-b-2 border-gray-400">
-              <tr className="">
-                <td className="px-4 py-2 text-md w-64 font-primaryRegular">
-                  کۆی گشتی دوای داشکاندن (0.00%)
-                </td>
-                <td className="px-4 py-2"></td>
-                <td className="px-4 py-2 font-medium"></td>
-                <td className="px-4 py-2"></td>
-                <td className="px-4 py-2">${invoice.invoice_total_pirce}</td>
-                <td className="px-4 py-2 font-medium"></td>
-              </tr>
-            </tbody>
 
             <tbody className="h-8 bg-gray-200 mt-10 pt-2">
               <tr className="">

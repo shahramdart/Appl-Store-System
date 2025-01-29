@@ -28,7 +28,6 @@ export default function StateCard() {
     setError(null);
     try {
       const response = await axios.get("http://localhost:4000/api/users");
-      console.log("User Data:", response.data); // Log the entire response
       setUsers(response.data);
     } catch (err) {
       setError("Error fetching users");
