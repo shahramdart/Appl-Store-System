@@ -36,7 +36,8 @@ function SideBar({ children }) {
   // Common menus
   const menus = [
     { name: "سەرەکی", link: "/dashboard", icon: IoHome },
-    { name: "فرۆشتن", link: "/sale", icon: FaCartShopping },
+    { name: "فرۆشتنی نەقد", link: "/sale", icon: FaCartShopping },
+    { name: "فرۆشتنی قەرز", link: "/saleDebt", icon: FaCartShopping },
     {
       name: "براندەکان",
       link: "/brands",
@@ -84,6 +85,7 @@ function SideBar({ children }) {
             menu.name !== "لیستی فرۆشتن" &&
             menu.name !== "لیستی کڕین" &&
             menu.name !== "لیستی قەرزەکان" &&
+            menu.name !== "فرۆشتنی قەرز" &&
             menu.name !== "براندەکان" &&
             menu.name !== "پسوولە"
         )

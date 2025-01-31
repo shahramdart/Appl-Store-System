@@ -53,8 +53,6 @@ function AllDebt() {
         ? product.customer_name.toLowerCase()
         : "";
 
-    console.log("Customer Name:", customerName); // Log customer name to check
-
     return customerName.includes(searchQuery.toLowerCase());
   });
 
@@ -79,7 +77,6 @@ function AllDebt() {
           placeholder="گەڕان بکە..."
           value={searchQuery}
           onChange={(e) => {
-            console.log("Search Query Updated:", e.target.value); // Check what's being typed
             setSearchQuery(e.target.value);
           }}
         />
@@ -127,6 +124,10 @@ function AllDebt() {
                 <th className="px-4 py-2 text-right font-primaryRegular">
                   کۆی گشتی
                 </th>
+
+                <th className="px-4 w-32 py-2 text-right font-primaryRegular">
+                  قیستی ماوە
+                </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
                   کڕیار
                 </th>
@@ -135,7 +136,7 @@ function AllDebt() {
                 </th>
               </tr>
               <tr>
-                <td colSpan="8">
+                <td colSpan="13">
                   <hr className="h-0.25 bg-gray-700" />
                 </td>
               </tr>
@@ -167,11 +168,12 @@ function AllDebt() {
                     <td className="px-4 py-2">${sale.paray_zyada}</td>
                     <td className="px-4 py-2">${sale.paray_mawa}</td>
                     <td className="px-4 py-2">${sale.total_price}</td>
+                    <td className="px-4 py-2">{sale.qisty_mawa}</td>
                     <td className="px-4 py-2">{sale.customer_name}</td>
                     <td className="px-4 py-2 flex justify-start space-x-2">
                       {sale?.id && (
                         <Link
-                          to="/invoice-list"
+                          to="/debt/invoice-list"
                           state={{ id: sale.id }}
                           className="text-gray-400  px-2 py-1 ml-2 rounded hover:text-gray-900 transition flex items-center"
                           aria-label={`View details of sale ${sale.id}`}

@@ -18,6 +18,8 @@ import Brand from "./pages/Brand";
 import AddBrand from "./pages/AddBrands";
 import InvoiceList from "./pages/Invoice-list";
 import Debt from "./pages/Debt";
+import DebtInvoice from "./pages/DebtInvoice";
+import SaleDebt from "./pages/SaleDebt";
 
 function App() {
   return (
@@ -36,11 +38,13 @@ function App() {
           <Route path="/allSale" element={<AllSales />} />
           {/* <Route path="/allSale/view" element={<InvoiceList />} /> */}
           <Route path="/invoice/invoice-list" element={<InvoiceList />} />
+          <Route path="/debt/invoice-list" element={<DebtInvoice />} />
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/expenses/view" element={<Expenses />} />
           <Route path="/dept" element={<Debt />} />
           <Route path="/invoice" element={<InvoiceSales />} />
           <Route path="/sale" element={<Sale />} />
+          <Route path="/saleDebt" element={<SaleDebt />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/add" element={<AddProducts />} />
           <Route path="/products/update" element={<UpdateProducts />} />

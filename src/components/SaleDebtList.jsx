@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import useScanDetection from "use-scan-detection";
 
-function SaleList() {
+function SaleDebtList() {
   const [products, setProducts] = useState([]);
   const [productId, setProductId] = useState("");
   const [salesRecords, setSalesRecords] = useState([]);
@@ -213,7 +213,7 @@ function SaleList() {
   return (
     <div className="realtive px-6 py-8">
       <h2 className="text-2xl text-gray-900 mb-6 font-primaryRegular">
-        بەشی فرۆشتنی نەقد
+        بەشی فرۆشتنی قەرزر
       </h2>
       {/* // ? Flex container for datepicker and table */}
       <div className="flex flex-row items-start justify-start gap-16">
@@ -364,9 +364,7 @@ function SaleList() {
                   <th className="px-7 py-2 text-right font-primaryRegular">
                     جۆری کاڵا
                   </th>
-                  <th className="px-7 py-2 text-right font-primaryRegular">
-                    براند
-                  </th>
+
                   <th className="px-7 py-2 text-right font-primaryRegular">
                     ناو
                   </th>
@@ -374,20 +372,30 @@ function SaleList() {
                     عەدەد
                   </th>
                   <th className="px-7 py-2 text-right font-primaryRegular">
-                    نرخ
+                    پێشەکی
                   </th>
                   <th className="px-7 py-2 text-right font-primaryRegular">
-                    مجموع
+                    پارەی زیادکراو
                   </th>
+                  <th className="px-7 py-2 text-right font-primaryRegular">
+                    لە بەرواری
+                  </th>
+                  <th className="px-7 py-2 text-right font-primaryRegular">
+                    بۆ بەرواری
+                  </th>
+
                   <th className="px-4 py-2 text-right font-primaryRegular">
                     ناوی کڕیار
                   </th>
                   <th className="px-7 py-2 text-right font-primaryRegular">
-                    تێبینی
+                    ژ.موبایل
+                  </th>
+                  <th className="px-7 py-2 text-right font-primaryRegular">
+                    ناونیشان
                   </th>
                 </tr>
                 <tr>
-                  <td colSpan="8">
+                  <td colSpan="9">
                     <hr className="h-0.25 bg-gray-700" />
                   </td>
                 </tr>
@@ -397,9 +405,6 @@ function SaleList() {
                   <tr key={index} className="text-gray-900">
                     <td className="px-8 py-2 text-sm text-right">
                       {sale.categoryName}
-                    </td>
-                    <td className="px-8 py-2 text-sm text-right">
-                      {sale.brandName}
                     </td>
                     <td className="px-8 py-2 text-sm text-right">
                       {sale.productName}
@@ -416,7 +421,7 @@ function SaleList() {
                       />
                     </td>
                     <td className="py-2 text-sm text-right">
-                      <div className="flex flex-row items-start max-w-sm w-48">
+                      <div className="flex flex-row items-start max-w-sm w-36">
                         <div className="relative flex items-start">
                           <input
                             value={sale.price}
@@ -425,46 +430,108 @@ function SaleList() {
                             }
                             className="w-24 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
                           />
-                          $
                         </div>
                       </div>
                     </td>
-                    <td className="px-8 py-2 text-sm text-right">
-                      ${sale.totalPrice}
-                    </td>
-                    <td className="py-2 px-2 text-sm text-right">
-                      <div className="flex flex-row  items-start  w-44">
+                    <td className="py-2 text-sm text-right">
+                      <div className="flex flex-row items-start max-w-sm w-36">
                         <div className="relative flex items-start">
                           <input
-                            value={salesRecords[index]?.invoice_customer || ""}
+                            value={sale.price}
+                            onChange={(e) =>
+                              handleInputChange(index, "price", e.target.value)
+                            }
+                            className="w-24 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                          />
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="py-2 px-2 text-sm text-right">
+                      <div className="flex flex-row  items-start  w-36">
+                        <div className="relative flex items-start">
+                          <input
+                            type="date"
+                            value={salesRecords[index]?.date || ""}
+                            onChange={(e) =>
+                              handleInputChange(index, "date", e.target.value)
+                            }
+                            placeholder="لە بەرواری"
+                            className="w-32 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                          />
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-2 px-2 text-sm text-right">
+                      <div className="flex flex-row  items-start  w-36">
+                        <div className="relative flex items-start">
+                          <input
+                            type="date"
+                            value={salesRecords[index]?.final_date || ""}
                             onChange={(e) =>
                               handleInputChange(
                                 index,
-                                "invoice_customer",
+                                "final_date",
                                 e.target.value
                               )
                             }
-                            placeholder="ناوی کڕیار"
-                            className="w-44 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            placeholder="کۆتا بەروار"
+                            className="w-32 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
                           />
                         </div>
                       </div>
                     </td>
 
                     <td className="py-2 text-sm text-right">
-                      <div className="flex flex-row items-center max-w-sm w-44">
+                      <div className="flex flex-row items-center max-w-sm w-36">
                         <div className="relative flex items-center">
                           <input
-                            value={salesRecords[index]?.description || ""}
+                            value={salesRecords[index]?.customer_name || ""}
                             onChange={(e) =>
                               handleInputChange(
                                 index,
-                                "description",
+                                "customer_name",
                                 e.target.value
                               )
                             }
-                            placeholder="تێبینی"
-                            className="w-44 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            placeholder="ناوی کڕیار"
+                            className="w-32 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                          />
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-2 text-sm text-right">
+                      <div className="flex flex-row items-center max-w-sm w-36">
+                        <div className="relative flex items-center">
+                          <input
+                            value={salesRecords[index]?.customer_phoneNo || ""}
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "customer_phoneNo",
+                                e.target.value
+                              )
+                            }
+                            placeholder="ژ.موبایل"
+                            className="w-32 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                          />
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-2 text-sm text-right">
+                      <div className="flex flex-row items-center max-w-sm w-36">
+                        <div className="relative flex items-center">
+                          <input
+                            value={salesRecords[index]?.customer_address || ""}
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "customer_address",
+                                e.target.value
+                              )
+                            }
+                            placeholder="ناونیشان"
+                            className="w-32 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
                           />
                         </div>
                       </div>
@@ -543,4 +610,4 @@ function SaleList() {
   );
 }
 
-export default SaleList;
+export default SaleDebtList;
