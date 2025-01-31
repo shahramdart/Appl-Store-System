@@ -75,7 +75,7 @@ const CategoryList = () => {
         )}
         <table className="w-full table-auto">
           <thead>
-            <tr className="text-black">
+            <tr className="text-gray-900">
               <th className="px-4 py-2 text-right font-primaryRegular">
                 ناوی جۆر
               </th>
@@ -85,17 +85,17 @@ const CategoryList = () => {
             </tr>
             <tr>
               <td colSpan="8">
-                <hr className="h-0.25 w-[900px] bg-gray-700" />
+                <hr className="h-0.25 w-[720px] bg-gray-700" />
               </td>
             </tr>
           </thead>
           <tbody>
             {categorys.map((category, index) => (
-              <>
+              <React.Fragment key={category.id}>
                 <tr key={category.id} className=" text-gray-900">
                   <td className="px-4 py-2">{category.category_name}</td>
                   <td className="pl-6 py-2 flex justify-start space-x-2">
-                    <Link
+                    {/* <Link
                       to="/koga"
                       state={{ id: category.id }}
                       className="text-gray-400 px-2 py-1 ml-2 rounded hover:text-gray-900 transition"
@@ -108,7 +108,7 @@ const CategoryList = () => {
                       >
                         <path d="M5.625 3.75a2.625 2.625 0 1 0 0 5.25h12.75a2.625 2.625 0 0 0 0-5.25H5.625ZM3.75 11.25a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5H3.75ZM3 15.75a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75ZM3.75 18.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5H3.75Z" />
                       </svg>
-                    </Link>
+                    </Link> */}
                     <Link
                       to="/category/update"
                       state={{ id: category.id }}
@@ -146,11 +146,11 @@ const CategoryList = () => {
                 {index < categorys.length - 1 && (
                   <tr>
                     <td colSpan="8">
-                      <hr className="h-0.25 w-[900px] bg-gray-700 my-2" />
+                      <hr className="h-0.25 w-[720px] bg-gray-700 my-2" />
                     </td>
                   </tr>
                 )}
-              </>
+              </React.Fragment>
             ))}
           </tbody>
         </table>

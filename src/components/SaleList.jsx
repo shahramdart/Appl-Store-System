@@ -1,7 +1,8 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import useScanDetection from "use-scan-detection";
 
 function SaleList() {
   const [products, setProducts] = useState([]);
@@ -17,6 +18,11 @@ function SaleList() {
   useEffect(() => {
     getProducts();
   }, []);
+
+  useScanDetection({
+    onComplete: setProductQrCode,
+    minLength: 1,
+  });
 
   const getProducts = async () => {
     try {
@@ -67,6 +73,7 @@ function SaleList() {
           productId: fetchedProduct.id, // Assuming the product ID is available in fetchedProduct
         };
         setSalesRecords((prevRecords) => [...prevRecords, newSale]);
+        setProductQrCode("");
       }
 
       setSelectedProduct(fetchedProduct);
@@ -82,25 +89,26 @@ function SaleList() {
   // ? salling items
   const handleInsertSalesData = async () => {
     try {
-      // Loop through each sales record
       for (const record of salesRecords) {
-        const product_id = parseInt(record.productId, 10); // Ensure product_id is an integer
+        const product_id = parseInt(record.productId, 10);
 
         if (!product_id || isNaN(product_id)) {
           console.error(
             `Invalid product_id for record with productId: ${record.productId}`
           );
-          continue; // Skip this record if product_id is invalid
+          continue; // Skip invalid product IDs
         }
 
         const salesData = {
-          salling_date: new Date().toISOString().split("T")[0], // Current date
+          salling_date: formattedDate, // Current date
           salling_quantity: record.quantity || 1,
           salling_price: record.price || 0,
-          salling_discount: selectedProduct.discount || 0,
-          salling_description: selectedProduct.description || "",
-          salling_status: selectedProduct.status || "کاش",
-          product_id: selectedProduct.id, // Selected product ID
+          salling_discount: record.discount || selectedProduct?.discount || 0,
+          salling_description:
+            record.description || selectedProduct?.description || "",
+          salling_status: record.status || selectedProduct?.status || "کاش",
+          product_id: record.productId, // Use `record.productId` instead of `selectedProduct.id`
+          invoice_customer: record.invoice_customer || "Walk-in",
         };
 
         const response = await axios.post(
@@ -108,14 +116,16 @@ function SaleList() {
           salesData
         );
 
-        if (response.status === 200) {
+        if (response.status >= 200 && response.status < 300) {
           console.log("Sale data inserted successfully:", response.data);
         } else {
           console.error("Error inserting sale data:", response.data);
         }
       }
+      // Refresh the page after data insertion
+      window.location.reload();
     } catch (error) {
-      console.error("Unexpected error:", error);
+      console.error("Unexpected error:", error.response?.data || error.message);
     }
   };
 
@@ -131,7 +141,11 @@ function SaleList() {
     }
 
     // Update total price when quantity or price changes
-    if (field === "quantity" || field === "price") {
+    if (
+      field === "quantity" ||
+      field === "price" ||
+      field === "invoice_customer"
+    ) {
       const quantity = parseFloat(updatedRecords[index].quantity) || 0;
       const price = parseFloat(updatedRecords[index].price) || 0;
       updatedRecords[index].totalPrice = quantity * price;
@@ -192,6 +206,10 @@ function SaleList() {
     return acc + (record.totalPrice || 0);
   }, 0);
 
+  const formattedDate = selectedDate
+    ? new Date(selectedDate).toLocaleDateString("en-CA") // "YYYY-MM-DD" format without timezone issues
+    : new Date().toLocaleDateString("en-CA");
+
   return (
     <div className="realtive px-6 py-8">
       <h2 className="text-2xl text-gray-900 mb-6 font-primaryRegular">
@@ -222,30 +240,33 @@ function SaleList() {
               </svg>
             </div>
           </div>
-          {/* // ? Discount section */}
+          {/* // ? add new record */}
           <div className="max-w-[212px] mt-10">
             <div className="relative group">
               {/* SVG Icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
+                fill="none"
                 viewBox="0 0 24 24"
-                fill="currentColor"
-                className="size-6 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-6 h-6 pointer-events-none"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="size-6 absolute left-3 top-1/2 transform -translate-y-1/2 text-white w-6 h-6 pointer-events-none"
               >
                 <path
-                  fillRule="evenodd"
-                  d="M7.875 1.5C6.839 1.5 6 2.34 6 3.375v2.99c-.426.053-.851.11-1.274.174-1.454.218-2.476 1.483-2.476 2.917v6.294a3 3 0 0 0 3 3h.27l-.155 1.705A1.875 1.875 0 0 0 7.232 22.5h9.536a1.875 1.875 0 0 0 1.867-2.045l-.155-1.705h.27a3 3 0 0 0 3-3V9.456c0-1.434-1.022-2.7-2.476-2.917A48.716 48.716 0 0 0 18 6.366V3.375c0-1.036-.84-1.875-1.875-1.875h-8.25ZM16.5 6.205v-2.83A.375.375 0 0 0 16.125 3h-8.25a.375.375 0 0 0-.375.375v2.83a49.353 49.353 0 0 1 9 0Zm-.217 8.265c.178.018.317.16.333.337l.526 5.784a.375.375 0 0 1-.374.409H7.232a.375.375 0 0 1-.374-.409l.526-5.784a.373.373 0 0 1 .333-.337 41.741 41.741 0 0 1 8.566 0Zm.967-3.97a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H18a.75.75 0 0 1-.75-.75V10.5ZM15 9.75a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V10.5a.75.75 0 0 0-.75-.75H15Z"
-                  clipRule="evenodd"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75h1.5m9 0h-9"
                 />
               </svg>
               {/* Button */}
               <button
                 onClick={handleInsertSalesData}
-                className="w-full bg-transparent text-start placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-6 py-4 transition duration-300 ease-in-out focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow hover:bg-gray-50 active:bg-gray-100 active:scale-95"
+                className="w-full font-primaryRegular bg-blue-600 text-start placeholder:text-slate-100 text-slate-100 text-sm border border-slate-200 rounded-md px-6 py-4 transition duration-300 ease-in-out focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow hover:bg-blue-700 active:bg-gray-100 active:scale-95"
               >
-                چاپکردن
+                پاشەکەوت
               </button>
             </div>
+            {/* // ? sale and print  */}
           </div>
         </div>
 
@@ -287,7 +308,6 @@ function SaleList() {
                 </label>
               </div>
             </div>
-
             {/* // ? Category Selection (Select Dropdown) */}
             {/* Category Selection */}
             <div className="max-w-sm w-64">
@@ -295,7 +315,11 @@ function SaleList() {
                 <select
                   className="peer font-primaryRegular text-sm w-full bg-transparent placeholder:text-slate-400 text-slate-400 border border-slate-200 rounded-md py-[18px] transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
                   value={productId}
-                  onChange={(e) => setProductId(Number(e.target.value))} // Ensure it's stored as a number
+                  onChange={(e) => {
+                    const selectedProductId = Number(e.target.value);
+                    setProductId(selectedProductId);
+                    console.log("Selected Product ID:", selectedProductId);
+                  }}
                 >
                   <option value="">هەموو کاڵاکان</option>
                   {products.map((product) => (
@@ -306,7 +330,6 @@ function SaleList() {
                 </select>
               </div>
             </div>
-
             {/* Add New Sale Button */}
             <button
               className="flex font-primaryRegular flex-row justify-center w-36 items-center rounded-md bg-slate-800 py-3 px-4 border border-transparent text-center text-lg text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
@@ -330,6 +353,7 @@ function SaleList() {
               </svg>
               زیادکردن
             </button>
+            {/* New button for printing items */}
           </div>
 
           {/* // ? Table */}
@@ -337,30 +361,33 @@ function SaleList() {
             <table className="min-w-full table-auto mt-12">
               <thead>
                 <tr className="text-slate-500">
-                  <th className="px-8 py-2 text-right font-primaryRegular">
+                  <th className="px-7 py-2 text-right font-primaryRegular">
                     جۆری کاڵا
                   </th>
-                  <th className="px-8 py-2 text-right font-primaryRegular">
+                  <th className="px-7 py-2 text-right font-primaryRegular">
                     براند
                   </th>
-                  <th className="px-8 py-2 text-right font-primaryRegular">
+                  <th className="px-7 py-2 text-right font-primaryRegular">
                     ناو
                   </th>
-                  <th className="px-8 py-2 text-right font-primaryRegular">
+                  <th className="px-6 py-2 text-right font-primaryRegular">
                     عەدەد
                   </th>
-                  <th className="px-8 py-2 text-right font-primaryRegular">
+                  <th className="px-7 py-2 text-right font-primaryRegular">
                     نرخ
                   </th>
-                  <th className="px-8 py-2 text-right font-primaryRegular">
+                  <th className="px-7 py-2 text-right font-primaryRegular">
                     مجموع
                   </th>
-                  <th className="px-8 py-2 text-right font-primaryRegular">
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    ناوی کڕیار
+                  </th>
+                  <th className="px-7 py-2 text-right font-primaryRegular">
                     تێبینی
                   </th>
                 </tr>
                 <tr>
-                  <td colSpan="7">
+                  <td colSpan="8">
                     <hr className="h-0.25 bg-gray-700" />
                   </td>
                 </tr>
@@ -389,8 +416,8 @@ function SaleList() {
                       />
                     </td>
                     <td className="py-2 text-sm text-right">
-                      <div className="flex flex-row items-center max-w-sm w-48">
-                        <div className="relative flex items-center">
+                      <div className="flex flex-row items-start max-w-sm w-48">
+                        <div className="relative flex items-start">
                           <input
                             value={sale.price}
                             onChange={(e) =>
@@ -405,8 +432,27 @@ function SaleList() {
                     <td className="px-8 py-2 text-sm text-right">
                       ${sale.totalPrice}
                     </td>
+                    <td className="py-2 px-2 text-sm text-right">
+                      <div className="flex flex-row  items-start  w-44">
+                        <div className="relative flex items-start">
+                          <input
+                            value={salesRecords[index]?.invoice_customer || ""}
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "invoice_customer",
+                                e.target.value
+                              )
+                            }
+                            placeholder="ناوی کڕیار"
+                            className="w-44 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                          />
+                        </div>
+                      </div>
+                    </td>
+
                     <td className="py-2 text-sm text-right">
-                      <div className="flex flex-row items-center max-w-sm w-64">
+                      <div className="flex flex-row items-center max-w-sm w-44">
                         <div className="relative flex items-center">
                           <input
                             value={salesRecords[index]?.description || ""}
@@ -417,7 +463,8 @@ function SaleList() {
                                 e.target.value
                               )
                             }
-                            className="w-64 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            placeholder="تێبینی"
+                            className="w-44 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
                           />
                         </div>
                       </div>
@@ -451,14 +498,14 @@ function SaleList() {
               {/* total invoice */}
             </table>
             {/* total qty and price after */}
-            <div className="h-8 bg-gray-100 w-full pr-2 rounded-b-sm flex items-center justify-between">
+            <div className="h-8 bg-gray-100 w-[60rem] pr-2 rounded-b-sm flex items-center justify-between">
               <span className="h-8 w-[50%] text-start font-primaryRegular">
                 کۆی گشتی پسوولە
               </span>
-              <span className="h-8 w-[25%] pr-2 text-start font-primaryRegular bg-white">
+              <span className="h-8 w-[43%] pr-2 text-start font-primaryRegular bg-white">
                 {totalQuantity} عدد
               </span>
-              <span className="h-8 w-[25%] pr-2 text-start font-primaryRegular bg-white">
+              <span className="h-8 w-[21%] pr-2 text-start font-primaryRegular bg-white">
                 ${totalAmount.toFixed(2)}
               </span>
             </div>

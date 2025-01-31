@@ -17,6 +17,7 @@ import Sale from "./pages/Sale";
 import Brand from "./pages/Brand";
 import AddBrand from "./pages/AddBrands";
 import InvoiceList from "./pages/Invoice-list";
+import Debt from "./pages/Debt";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="/invoice/invoice-list" element={<InvoiceList />} />
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/expenses/view" element={<Expenses />} />
+          <Route path="/dept" element={<Debt />} />
           <Route path="/invoice" element={<InvoiceSales />} />
           <Route path="/sale" element={<Sale />} />
           <Route path="/products" element={<Products />} />

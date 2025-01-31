@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-const AllSalesList = () => {
+function AllDebt() {
   const [sales, setSales] = useState([]);
   const [profit, setProfit] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState(""); // State for selected month
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Fetch all sales data
   useEffect(() => {
@@ -19,7 +20,7 @@ const AllSalesList = () => {
     setLoading(true);
     setError(null); // Reset error state before making a request
     try {
-      const response = await axios.get("http://localhost:4000/api/sale");
+      const response = await axios.get("http://localhost:4000/api/payment");
       setSales(response.data);
     } catch (err) {
       setError("Error fetching sales: " + err.message);
@@ -46,20 +47,23 @@ const AllSalesList = () => {
   };
 
   // Filter sales by selected month
-  const filteredSales = selectedMonth
-    ? sales.filter((sale) => {
-        const saleDate = new Date(sale.createdAt);
-        return saleDate.getMonth() === parseInt(selectedMonth) - 1; // Match the month (0-indexed)
-      })
-    : sales;
+  const filteredProducts = sales.filter((product) => {
+    const customerName =
+      typeof product.customer_name === "string"
+        ? product.customer_name.toLowerCase()
+        : "";
+
+    console.log("Customer Name:", customerName); // Log customer name to check
+
+    return customerName.includes(searchQuery.toLowerCase());
+  });
 
   return (
     <div className="container mx-auto mt-8 p-4">
       <div className="flex flex-row justify-between">
         <h2 className="text-2xl text-gray-900 mb-6 font-primaryRegular">
-          لیستی فرۆشتنەکان
+          لیستی قەرزەکان
         </h2>
-        <h2 className="text-2xl text-gray-900 mb-6">${profit.total}</h2>
       </div>
 
       {loading && (
@@ -67,46 +71,24 @@ const AllSalesList = () => {
       )}
 
       {/* Month filter input */}
-      <div className="mb-4 flex justify-between items-center">
-        <select
-          id="month"
-          className="flex-2 peer w-[300px] bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-4 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
-        >
-          <option value="" className="font-primaryRegular">
-            هەموو مانگەکان
-          </option>
-          {Array.from({ length: 12 }, (_, index) => (
-            <option key={index} value={index + 1}>
-              {new Date(0, index).toLocaleString("default", { month: "long" })}
-            </option>
-          ))}
-        </select>
-
-        <button
-          className="text-gray-400 px-2 py-1 ml-2 rounded hover:text-gray-900 transition"
-          onClick={() => console.log("Print work")}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="size-6"
-          >
-            <path
-              fillRule="evenodd"
-              d="M7.875 1.5C6.839 1.5 6 2.34 6 3.375v2.99c-.426.053-.851.11-1.274.174-1.454.218-2.476 1.483-2.476 2.917v6.294a3 3 0 0 0 3 3h.27l-.155 1.705A1.875 1.875 0 0 0 7.232 22.5h9.536a1.875 1.875 0 0 0 1.867-2.045l-.155-1.705h.27a3 3 0 0 0 3-3V9.456c0-1.434-1.022-2.7-2.476-2.917A48.716 48.716 0 0 0 18 6.366V3.375c0-1.036-.84-1.875-1.875-1.875h-8.25ZM16.5 6.205v-2.83A.375.375 0 0 0 16.125 3h-8.25a.375.375 0 0 0-.375.375v2.83a49.353 49.353 0 0 1 9 0Zm-.217 8.265c.178.018.317.16.333.337l.526 5.784a.375.375 0 0 1-.374.409H7.232a.375.375 0 0 1-.374-.409l.526-5.784a.373.373 0 0 1 .333-.337 41.741 41.741 0 0 1 8.566 0Zm.967-3.97a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H18a.75.75 0 0 1-.75-.75V10.5ZM15 9.75a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V10.5a.75.75 0 0 0-.75-.75H15Z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
+      <div className="flex items-center justify-between mb-4">
+        {/* Search Input */}
+        <input
+          type="text"
+          className="flex-2 peer bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-4 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
+          placeholder="گەڕان بکە..."
+          value={searchQuery}
+          onChange={(e) => {
+            console.log("Search Query Updated:", e.target.value); // Check what's being typed
+            setSearchQuery(e.target.value);
+          }}
+        />
       </div>
 
       <div className="overflow-x-auto">
-        {filteredSales.length === 0 ? (
+        {filteredProducts.length === 0 ? (
           <p className="text-gray-500 font-primaryRegular text-center py-4">
-            هیچ کاڵایەک نەفرۆشراوە
+            هیچ قەرزێک بوونی نییە!
           </p>
         ) : (
           <table className="min-w-full table-auto">
@@ -116,16 +98,16 @@ const AllSalesList = () => {
                   جۆری کاڵا
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
-                  بڕاند
+                  براند
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
                   ناو
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
-                  لە لایەن
+                  لە بەرواری
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
-                  بەروار
+                  بۆ بەرواری
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
                   دانە
@@ -134,10 +116,19 @@ const AllSalesList = () => {
                   نرخ
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
+                  پێشەکی
+                </th>
+                <th className="px-4 py-2 text-right font-primaryRegular">
+                  زیدکراو
+                </th>
+                <th className="px-4 py-2 text-right font-primaryRegular">
+                  پارەی ماوە
+                </th>
+                <th className="px-4 py-2 text-right font-primaryRegular">
                   کۆی گشتی
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
-                  قازانج
+                  کڕیار
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
                   بینین
@@ -150,22 +141,33 @@ const AllSalesList = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredSales.map((sale, index) => (
+              {filteredProducts.map((sale, index) => (
                 <React.Fragment key={sale.id}>
                   <tr className="text-gray-900">
-                    <td className="px-4 py-2">{sale.category_name || "N/A"}</td>
-                    <td className="px-4 py-2">{sale.brand_name || "N/A"}</td>
-                    <td className="px-4 py-2">{sale.product_name}</td>
-                    <td className="px-4 py-2">{sale.user_name || "N/A"}</td>
                     <td className="px-4 py-2">
-                      {sale.createdAt
-                        ? new Date(sale.createdAt).toLocaleDateString("en-CA")
+                      {sale.products.category.category_name || "N/A"}
+                    </td>
+                    <td className="px-4 py-2">
+                      {sale.products.brands.brand_name || "N/A"}
+                    </td>
+                    <td className="px-4 py-2">{sale.products.product_name}</td>
+                    <td className="px-4 py-2">
+                      {sale.date
+                        ? new Date(sale.date).toLocaleDateString("en-CA")
+                        : "N/A"}
+                    </td>
+                    <td className="px-4 py-2">
+                      {sale.final_date
+                        ? new Date(sale.final_date).toLocaleDateString("en-CA")
                         : "N/A"}
                     </td>
                     <td className="px-4 py-2">{sale.quantity}</td>
-                    <td className="px-4 py-2">${sale.price}</td>
+                    <td className="px-4 py-2">${sale.product_price}</td>
+                    <td className="px-4 py-2">${sale.peshaky_payment}</td>
+                    <td className="px-4 py-2">${sale.paray_zyada}</td>
+                    <td className="px-4 py-2">${sale.paray_mawa}</td>
                     <td className="px-4 py-2">${sale.total_price}</td>
-                    <td className="px-4 py-2">${sale.profit_amount}</td>
+                    <td className="px-4 py-2">{sale.customer_name}</td>
                     <td className="px-4 py-2 flex justify-start space-x-2">
                       {sale?.id && (
                         <Link
@@ -197,7 +199,7 @@ const AllSalesList = () => {
                       )}
                     </td>
                   </tr>
-                  {index < filteredSales.length - 1 && (
+                  {index < filteredProducts.length - 1 && (
                     <tr>
                       <td colSpan="8">
                         <hr className="h-0.25 bg-gray-700 my-2" />
@@ -212,6 +214,6 @@ const AllSalesList = () => {
       </div>
     </div>
   );
-};
+}
 
-export default AllSalesList;
+export default AllDebt;

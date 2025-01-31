@@ -118,11 +118,8 @@ const ExpensesList = () => {
             </thead>
             <tbody>
               {filteredExpenses.map((expenses, index) => (
-                <>
-                  <tr
-                    key={`${expenses.uuid}-${expenses.product_name}`}
-                    className="text-gray-900"
-                  >
+                <React.Fragment key={expenses.id}>
+                  <tr className="text-gray-900">
                     <td className=" px-4 py-2">{expenses.product_name}</td>
                     <td className=" px-4 py-2">{expenses.quantity}</td>
                     <td className=" px-4 py-2">
@@ -181,7 +178,7 @@ const ExpensesList = () => {
                       </td>
                     </tr>
                   )}
-                </>
+                </React.Fragment>
               ))}
             </tbody>
           </table>

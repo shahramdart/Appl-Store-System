@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import useScanDetection from "use-scan-detection";
 
 const UpdateProducts = () => {
   const [name, setName] = useState("");
@@ -51,6 +52,11 @@ const UpdateProducts = () => {
     fetchCategories();
     fetchProduct();
   }, [id]);
+
+  useScanDetection({
+    onComplete: setQrcode,
+    minLength: 1,
+  });
 
   // Update product
   const updateProduct = async (e) => {

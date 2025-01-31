@@ -75,8 +75,8 @@ const UserList = () => {
           </thead>
           <tbody>
             {users.map((user, index) => (
-              <>
-                <tr className="text-gray-900" key={user.id}>
+              <React.Fragment key={user.id}>
+                <tr className="text-gray-900">
                   <td className="text-black text-right px-4 py-2">
                     {index + 1}
                   </td>
@@ -135,7 +135,7 @@ const UserList = () => {
                     </td>
                   </tr>
                 )}
-              </>
+              </React.Fragment>
             ))}
           </tbody>
         </table>

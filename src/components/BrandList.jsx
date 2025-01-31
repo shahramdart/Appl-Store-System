@@ -40,7 +40,7 @@ const BrandList = () => {
   };
 
   return (
-    <div className="flex items-center justify-center mx-auto mt-8 p-4">
+    <div className="flex items-center justify-center mt-10">
       <div className="w-10/12">
         <h2 className="text-2xl text-gray-900 mb-6 font-primaryRegular">
           لیستی بڕاندەکان
@@ -82,20 +82,20 @@ const BrandList = () => {
                 </th>
               </tr>
               <tr>
-                <td colSpan="8">
-                  <hr className="h-0.25 w-[800px] bg-gray-700" />
+                <td colSpan="6">
+                  <hr className="h-0.25 w-[620px] bg-gray-700" />
                 </td>
               </tr>
             </thead>
             <tbody>
               {brands.map((brand, index) => (
-                <>
+                <React.Fragment key={brand.id}>
                   <tr key={brand.id} className=" text-gray-900">
                     <td className="px-4 py-2 font-primaryRegular">
                       {brand.brand_name}
                     </td>
                     <td className="pl-6 py-2 flex justify-start space-x-2">
-                      <Link
+                      {/* <Link
                         to="/brands/update"
                         state={{ id: brand.id }}
                         className="text-gray-400 px-2 py-1 ml-2 rounded hover:text-gray-900 transition"
@@ -108,7 +108,7 @@ const BrandList = () => {
                         >
                           <path d="M5.625 3.75a2.625 2.625 0 1 0 0 5.25h12.75a2.625 2.625 0 0 0 0-5.25H5.625ZM3.75 11.25a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5H3.75ZM3 15.75a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75ZM3.75 18.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5H3.75Z" />
                         </svg>
-                      </Link>
+                      </Link> */}
                       <Link
                         to="/brands/update"
                         state={{ id: brand.id }}
@@ -146,11 +146,11 @@ const BrandList = () => {
                   {index < brands.length - 1 && (
                     <tr>
                       <td colSpan="8">
-                        <hr className="h-0.25 w-[800px] bg-gray-700 my-2" />
+                        <hr className="h-0.25 w-[620px] bg-gray-700 my-2" />
                       </td>
                     </tr>
                   )}
-                </>
+                </React.Fragment>
               ))}
             </tbody>
           </table>

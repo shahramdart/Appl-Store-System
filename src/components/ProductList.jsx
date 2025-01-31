@@ -74,7 +74,7 @@ const ProductList = () => {
   };
 
   return (
-    <div className="container mx-auto mt-8 p-4">
+    <div className="container mx-auto mr-10 mt-10 p-4">
       <h2 className="text-2xl text-gray-900 mb-6 font-primaryRegular">
         لیستی کاڵاکان
       </h2>
@@ -82,7 +82,7 @@ const ProductList = () => {
         {/* Search Input */}
         <input
           type="text"
-          className="flex-2 px-4 py-3 font-primaryRegular rounded-md bg-white shadow-md border border-gray-300"
+          className="flex-2 peer bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-4 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
           placeholder="گەڕان بکە..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -90,7 +90,7 @@ const ProductList = () => {
         {users?.[0]?.permission?.permissions === "Admin" ? (
           <Link
             to={`/products/add`}
-            className="flex items-center font-primaryRegular text-lg bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-900"
+            className="flex items-center font-primaryRegular text-lg bg-gray-700 text-white px-4 ml-20 py-2 rounded-md hover:bg-gray-900"
           >
             زیادکردن
           </Link>
@@ -142,7 +142,7 @@ const ProductList = () => {
           </thead>
           <tbody>
             {filteredProducts.map((product, index) => (
-              <>
+              <React.Fragment key={product.id}>
                 <tr key={product.id} className="text-gray-900">
                   <td className="px-4 py-2">{product.product_name}</td>
                   <td className="px-4 py-2 font-primaryRegular">
@@ -207,7 +207,7 @@ const ProductList = () => {
                     </td>
                   </tr>
                 )}
-              </>
+              </React.Fragment>
             ))}
           </tbody>
         </table>

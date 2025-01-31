@@ -98,6 +98,9 @@ const InvoiceLists = () => {
                 <th className="px-4 py-2 text-right font-primaryRegular">
                   مجموح
                 </th>
+                <th className="px-4 py-2 text-right font-primaryRegular">
+                  ناوی کڕیار
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -116,6 +119,7 @@ const InvoiceLists = () => {
                 <td className="px-4 py-2">{invoice.invoice_quantity} عدد</td>
                 <td className="px-4 py-2">${invoice.invoice_pirce}</td>
                 <td className="px-4 py-2">${invoice.invoice_total_pirce}</td>
+                <td className="px-4 py-2 w-36">{invoice.invoice_customer}</td>
               </tr>
             </tbody>
 
@@ -129,6 +133,7 @@ const InvoiceLists = () => {
                 <td className="px-4 py-2 font-medium w-36">
                   {invoice.invoice_quantity} عدد
                 </td>
+                <td className="px-4 py-2"></td>
                 <td className="px-4 py-2"></td>
                 <td className="px-4 py-2 font-medium">
                   ${invoice.invoice_total_pirce}
@@ -153,11 +158,12 @@ const InvoiceLists = () => {
 
             <tbody className="h-8 bg-gray-200 mt-10 pt-2">
               <tr className="">
-                <td className="px-4 py-2 text-md font-primaryRegular">
+                <td className="px-4 w-[200px] py-2 text-md font-primaryRegular">
                   نرخی کۆتایی
                 </td>
                 <td className="px-4 py-2"></td>
                 <td className="px-4 py-2 font-medium"></td>
+                <td className="px-4 py-2"></td>
                 <td className="px-4 py-2"></td>
                 <td className="px-4 py-2 text-center">
                   ${invoice.invoice_total_pirce}

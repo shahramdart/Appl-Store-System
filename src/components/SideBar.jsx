@@ -81,6 +81,10 @@ function SideBar({ children }) {
             menu.name !== "ڕێکخستن" &&
             menu.name !== "کۆی فرۆشتن" &&
             menu.name !== "کۆی کڕین" &&
+            menu.name !== "لیستی فرۆشتن" &&
+            menu.name !== "لیستی کڕین" &&
+            menu.name !== "لیستی قەرزەکان" &&
+            menu.name !== "براندەکان" &&
             menu.name !== "پسوولە"
         )
       : menus;
