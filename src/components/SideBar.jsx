@@ -37,7 +37,7 @@ function SideBar({ children }) {
   const menus = [
     { name: "سەرەکی", link: "/dashboard", icon: IoHome },
     { name: "فرۆشتنی نەقد", link: "/sale", icon: FaCartShopping },
-    { name: "فرۆشتنی قەرز", link: "/saleDebt", icon: FaCartShopping },
+    // { name: "فرۆشتنی قەرز", link: "/saleDebt", icon: FaCartShopping },
     {
       name: "براندەکان",
       link: "/brands",
@@ -63,11 +63,11 @@ function SideBar({ children }) {
       link: "/expenses",
       icon: FaClipboardList,
     },
-    {
-      name: "لیستی قەرزەکان",
-      link: "/dept",
-      icon: MdOutlineMoneyOff,
-    },
+    // {
+    //   name: "لیستی قەرزەکان",
+    //   link: "/dept",
+    //   icon: MdOutlineMoneyOff,
+    // },
 
     { name: "بەکارهێنەران", link: "/users", icon: AiOutlineUser },
   ];
@@ -84,8 +84,8 @@ function SideBar({ children }) {
             menu.name !== "کۆی کڕین" &&
             menu.name !== "لیستی فرۆشتن" &&
             menu.name !== "لیستی کڕین" &&
-            menu.name !== "لیستی قەرزەکان" &&
-            menu.name !== "فرۆشتنی قەرز" &&
+            // menu.name !== "لیستی قەرزەکان" &&
+            // menu.name !== "فرۆشتنی قەرز" &&
             menu.name !== "براندەکان" &&
             menu.name !== "پسوولە"
         )
