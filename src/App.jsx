@@ -20,6 +20,7 @@ import InvoiceList from "./pages/Invoice-list";
 import Debt from "./pages/Debt";
 import DebtInvoice from "./pages/DebtInvoice";
 import SaleDebt from "./pages/SaleDebt";
+import BarcodeGenerator from "./pages/BarCodeGenerator";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/barcode" element={<BarcodeGenerator />} />
           <Route path="/users/add" element={<AddUser />} />
           <Route path="/users/update" element={<UpdateUser />} />
           <Route path="/category" element={<Category />} />

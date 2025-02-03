@@ -14,6 +14,7 @@ function SaleList() {
   const [error, setError] = useState(null);
   // ? for datepicker
   const [selectedDate, setSelectedDate] = useState(null); // Initialize the date state
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   useEffect(() => {
     getProducts();
@@ -33,6 +34,28 @@ function SaleList() {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    // Check if any product has 0 quantity and disable the button
+    const checkProductStock = async () => {
+      const product_id = selectedProduct?.id; // Assuming you have selectedProduct with the ID
+
+      if (product_id) {
+        const productResponse = await axios.get(
+          `http://localhost:4000/api/product/${product_id}`
+        );
+        const product = productResponse.data;
+
+        if (product.product_qty === 0) {
+          setIsButtonDisabled(true);
+        } else {
+          setIsButtonDisabled(false); // Enable the button if quantity is available
+        }
+      }
+    };
+
+    checkProductStock(); // Check stock whenever the selectedProduct changes
+  }, [selectedProduct]); // Triggered every time selectedProduct changes
 
   // ? Getting data by qrcode
   const handleQrCodeChange = async (e) => {
@@ -89,6 +112,10 @@ function SaleList() {
   // ? salling items
   const handleInsertSalesData = async () => {
     try {
+      if (isButtonDisabled) {
+        return; // Stop further execution if the button is disabled
+      }
+
       for (const record of salesRecords) {
         const product_id = parseInt(record.productId, 10);
 
@@ -99,16 +126,20 @@ function SaleList() {
           continue; // Skip invalid product IDs
         }
 
+        // Proceed with the sale data insertion
         const salesData = {
           salling_date: formattedDate, // Current date
           salling_quantity: record.quantity || 1,
-          salling_price: record.price || 0,
+          salling_price: record.price || null,
           salling_discount: record.discount || selectedProduct?.discount || 0,
           salling_description:
             record.description || selectedProduct?.description || "",
           salling_status: record.status || selectedProduct?.status || "کاش",
           product_id: record.productId, // Use `record.productId` instead of `selectedProduct.id`
           invoice_customer: record.invoice_customer || "Walk-in",
+          customer_phoneNo: record.customer_phoneNo || "Walk-in",
+          customer_address: record.customer_address || "Walk-in",
+          salling_price_dolar: record.salling_price_dolar || 0,
         };
 
         const response = await axios.post(
@@ -122,6 +153,7 @@ function SaleList() {
           console.error("Error inserting sale data:", response.data);
         }
       }
+
       // Refresh the page after data insertion
       window.location.reload();
     } catch (error) {
@@ -144,10 +176,13 @@ function SaleList() {
     if (
       field === "quantity" ||
       field === "price" ||
-      field === "invoice_customer"
+      field === "invoice_customer" ||
+      field === "salling_price_dolar" ||
+      field === "customer_phoneNo" ||
+      field === "customer_address"
     ) {
-      const quantity = parseFloat(updatedRecords[index].quantity) || 0;
-      const price = parseFloat(updatedRecords[index].price) || 0;
+      const quantity = parseFloat(updatedRecords[index].quantity) || null;
+      const price = parseFloat(updatedRecords[index].price) || null;
       updatedRecords[index].totalPrice = quantity * price;
     }
 
@@ -224,7 +259,7 @@ function SaleList() {
             <DatePicker
               selected={selectedDate}
               onChange={(date) => setSelectedDate(date)}
-              className="peer w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-8 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
+              className="peer w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-2 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
               dateFormat="yyyy-MM-dd"
               placeholderText="Select date"
             />
@@ -261,7 +296,12 @@ function SaleList() {
               {/* Button */}
               <button
                 onClick={handleInsertSalesData}
-                className="w-full font-primaryRegular bg-gray-700 text-start placeholder:text-slate-100 text-slate-100 text-sm border border-slate-200 rounded-md px-6 py-4 transition duration-300 ease-in-out focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow hover:bg-gray-900 active:bg-gray-100 active:scale-95"
+                disabled={isButtonDisabled}
+                className={`w-full font-primaryRegular bg-gray-700 text-start placeholder:text-slate-100 text-slate-100 text-sm border border-slate-200 rounded-md px-6 py-4 transition duration-300 ease-in-out focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow ${
+                  isButtonDisabled
+                    ? "cursor-not-allowed opacity-50"
+                    : "hover:bg-gray-900 active:bg-gray-100 active:scale-95"
+                }`}
               >
                 پاشەکەوت
               </button>
@@ -364,30 +404,34 @@ function SaleList() {
                   <th className="px-7 py-2 text-right font-primaryRegular">
                     جۆری کاڵا
                   </th>
-                  <th className="px-7 py-2 text-right font-primaryRegular">
-                    براند
-                  </th>
-                  <th className="px-7 py-2 text-right font-primaryRegular">
+
+                  <th className="px-7 py-2 w-36 text-right font-primaryRegular">
                     ناو
                   </th>
                   <th className="px-6 py-2 text-right font-primaryRegular">
                     عەدەد
                   </th>
                   <th className="px-7 py-2 text-right font-primaryRegular">
-                    نرخ
-                  </th>
-                  <th className="px-7 py-2 text-right font-primaryRegular">
-                    مجموع
+                    نرخ بە دینار
                   </th>
                   <th className="px-4 py-2 text-right font-primaryRegular">
                     ناوی کڕیار
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    ناونیشان
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    ژ.موبایل
+                  </th>
+                  <th className="px-7 py-2 text-right font-primaryRegular">
+                    نرخ بە دۆلار
                   </th>
                   <th className="px-7 py-2 text-right font-primaryRegular">
                     تێبینی
                   </th>
                 </tr>
                 <tr>
-                  <td colSpan="8">
+                  <td colSpan="10">
                     <hr className="h-0.25 bg-gray-700" />
                   </td>
                 </tr>
@@ -395,16 +439,14 @@ function SaleList() {
               <tbody>
                 {salesRecords.map((sale, index) => (
                   <tr key={index} className="text-gray-900">
-                    <td className="px-8 py-2 text-sm text-right">
+                    <td className="px-2 py-2 text-sm text-right">
                       {sale.categoryName}
                     </td>
-                    <td className="px-8 py-2 text-sm text-right">
-                      {sale.brandName}
-                    </td>
-                    <td className="px-8 py-2 text-sm text-right">
+
+                    <td className="px-2 py-2 w-48 text-sm text-right">
                       {sale.productName}
                     </td>
-                    <td className="px-8 py-2 text-sm text-right">
+                    <td className="px-2 py-2 text-sm text-right">
                       <input
                         value={sale.quantity} // Ensure there's a default value in case quantity is undefined
                         onChange={(e) =>
@@ -416,24 +458,21 @@ function SaleList() {
                       />
                     </td>
                     <td className="py-2 text-sm text-right">
-                      <div className="flex flex-row items-start max-w-sm w-48">
-                        <div className="relative flex items-start">
+                      <div className="flex flex-row items-center max-w-sm w-36">
+                        <div className="relative flex items-center">
                           <input
-                            value={sale.price}
                             onChange={(e) =>
                               handleInputChange(index, "price", e.target.value)
                             }
                             className="w-24 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
                           />
-                          $
+                          IQD
                         </div>
                       </div>
                     </td>
-                    <td className="px-8 py-2 text-sm text-right">
-                      ${sale.totalPrice}
-                    </td>
+
                     <td className="py-2 px-2 text-sm text-right">
-                      <div className="flex flex-row  items-start  w-44">
+                      <div className="flex flex-row  items-start  w-36">
                         <div className="relative flex items-start">
                           <input
                             value={salesRecords[index]?.invoice_customer || ""}
@@ -445,14 +484,69 @@ function SaleList() {
                               )
                             }
                             placeholder="ناوی کڕیار"
-                            className="w-44 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
                           />
                         </div>
                       </div>
                     </td>
-
+                    <td className="py-2 px-2 text-sm text-right">
+                      <div className="flex flex-row  items-start  w-36">
+                        <div className="relative flex items-start">
+                          <input
+                            value={salesRecords[index]?.customer_address || ""}
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "customer_address",
+                                e.target.value
+                              )
+                            }
+                            placeholder="ناونیشان"
+                            className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                          />
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-2 px-2 text-sm text-right">
+                      <div className="flex flex-row  items-start  w-36">
+                        <div className="relative flex items-start">
+                          <input
+                            value={salesRecords[index]?.customer_phoneNo || ""}
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "customer_phoneNo",
+                                e.target.value
+                              )
+                            }
+                            placeholder="ژ.موبایل"
+                            className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                          />
+                        </div>
+                      </div>
+                    </td>
                     <td className="py-2 text-sm text-right">
-                      <div className="flex flex-row items-center max-w-sm w-44">
+                      <div className="flex flex-row items-center max-w-sm w-36">
+                        <div className="relative flex items-center">
+                          <input
+                            value={
+                              salesRecords[index]?.salling_price_dolar || ""
+                            }
+                            onChange={(e) =>
+                              handleInputChange(
+                                index,
+                                "salling_price_dolar",
+                                e.target.value
+                              )
+                            }
+                            className="w-24 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                          />
+                          $
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-2 text-sm text-right">
+                      <div className="flex flex-row items-center max-w-sm w-36">
                         <div className="relative flex items-center">
                           <input
                             value={salesRecords[index]?.description || ""}
@@ -464,7 +558,7 @@ function SaleList() {
                               )
                             }
                             placeholder="تێبینی"
-                            className="w-44 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
                           />
                         </div>
                       </div>
@@ -506,13 +600,15 @@ function SaleList() {
                 {totalQuantity} عدد
               </span>
               <span className="h-8 w-[21%] pr-2 text-start font-primaryRegular bg-white">
-                ${totalAmount.toFixed(2)}
+                IQD {Number(totalAmount).toLocaleString()}
               </span>
             </div>
             {selectedProduct && selectedProduct.product_qty === 0 && (
-              <span className="h-8 w-[21%] pr-2 text-start text-red-500 font-primaryRegular bg-white">
-                عددی نەماوە
-              </span>
+              <div className="flex flex-row justify-center items-center mt-10 bg-red-500 w-[200px] h-8 rounded-md">
+                <span className="pr-2 text-2xl text-white font-primaryRegular">
+                  عددی نەماوە
+                </span>
+              </div>
             )}
           </div>
         </div>
@@ -526,11 +622,24 @@ function SaleList() {
                 {selectedProduct?.brands?.brand_name} -{" "}
                 {selectedProduct.product_name}
               </h2>
-              <h2 className="">{selectedProduct.product_qty} عدد ماوە</h2>
+              <h2
+                className={
+                  selectedProduct.product_qty
+                    ? "text-black"
+                    : "text-red-500 text-xl"
+                }
+              >
+                {selectedProduct.product_qty} عدد ماوە
+              </h2>
             </div>
             <div className="">
               <h3 className="text-gray-500">
-                نرخی کڕینی: {selectedProduct.product_price}$
+                نرخ بە دینار: IQD{" "}
+                {Number(selectedProduct.product_price).toLocaleString()}
+              </h3>
+              <h3 className="text-gray-500">
+                نرخ بە دۆلار:{" "}
+                {Number(selectedProduct.product_price_dolar).toLocaleString()}$
               </h3>
               <span className="text-sm text-gray-500">
                 جۆری کاڵا - {selectedProduct?.category?.category_name}{" "}

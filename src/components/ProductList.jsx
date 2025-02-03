@@ -114,7 +114,12 @@ const ProductList = () => {
               <th className=" px-4 py-2 text-right font-primaryRegular">
                 ڕەنگ
               </th>
-              <th className=" px-4 py-2 text-right font-primaryRegular">نرخ</th>
+              <th className=" px-4 py-2 text-right font-primaryRegular">
+                دینار
+              </th>
+              <th className=" px-4 py-2 text-right font-primaryRegular">
+                دۆلار
+              </th>
               <th className=" px-4 py-2 text-right font-primaryRegular">
                 عەدەد
               </th>
@@ -148,7 +153,12 @@ const ProductList = () => {
                   <td className="px-4 py-2 font-primaryRegular">
                     {product.product_color || "بەردەست نیە"}
                   </td>
-                  <td className="px-4 py-2">${product.product_price}</td>
+                  <td className="px-4 py-2">
+                    IQD {Number(product.product_price).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-2">
+                    ${Number(product.product_price_dolar).toLocaleString()}
+                  </td>
                   <td className="px-4 py-2">{product.product_qty}</td>
                   <td className="px-4 py-2">{product.product_qrcode}</td>
                   <td className="px-4 py-2">

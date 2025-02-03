@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Logo from "../assets/Logo.png";
+import Logo from "../assets/logo.jpg";
 import axios from "axios";
+import { useReactToPrint } from "react-to-print";
 
 const InvoiceLists = () => {
   const location = useLocation();
@@ -49,7 +50,7 @@ const InvoiceLists = () => {
     const printContents = `
       <div style="text-align: right; direction: rtl; margin: 20px;">
         <header style="text-align: center; font-size: 15px; margin-bottom: 20px;">
-          <strong>Code Crafted</strong>
+          <strong>Code Craft</strong>
         </header>
           <div style="text-align: end; margin-bottom: 10px; font-size: 10px">
         <span>${formattedDate}  ${formattedTime}</span>
@@ -70,132 +71,113 @@ const InvoiceLists = () => {
   };
 
   return (
-    <div className="div w-[50%] mt-8 p-4">
-      {/* Invoice Content */}
-      <div
-        ref={printRef}
-        className="flex flex-col justify-start items-start border border-gray-400 rounded-md"
-      >
-        <img src={Logo} alt="Logo" className="h-80" />
-        {/* Invoice Details */}
-        {invoice ? (
-          <table className="min-w-full table-auto">
-            <thead>
-              <tr className="text-black bg-gray-200 border-solid border-b-2 border-gray-400">
-                <th className="px-4 py-2 text-right font-primaryRegular">#</th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  مواد
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  بەردوار
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  عدد
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  سعر
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  مجموح
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  ناوی کڕیار
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="text-gray-500 bg-white">
-                <td className="px-4 py-2 w-16">1</td>
-                <td className="px-4 py-2  w-80">
-                  {invoice.products.category.category_name} -{" "}
-                  {invoice.products.brands.brand_name} -{" "}
-                  {invoice.products.product_name}
-                </td>
-                <td className="px-4 py-2">
-                  {invoice.invoice_date
-                    ? new Date(invoice.invoice_date).toLocaleDateString("en-CA")
-                    : "N/A"}
-                </td>
-                <td className="px-4 py-2">{invoice.invoice_quantity} عدد</td>
-                <td className="px-4 py-2">${invoice.invoice_pirce}</td>
-                <td className="px-4 py-2">${invoice.invoice_total_pirce}</td>
-                <td className="px-4 py-2 w-36">{invoice.invoice_customer}</td>
-              </tr>
-            </tbody>
-
-            {/* Invoice Totals */}
-            <tbody className="bg-gray-200 border-t-2 border-gray-400">
-              <tr className="">
-                <td className="px-4 py-2 text-md font-primaryRegular">
-                  کۆی گشتی پسوولە
-                </td>
-                <td className="px-4 py-2"></td>
-                <td className="px-4 py-2 font-medium w-36">
-                  {invoice.invoice_quantity} عدد
-                </td>
-                <td className="px-4 py-2"></td>
-                <td className="px-4 py-2"></td>
-                <td className="px-4 py-2 font-medium">
-                  ${invoice.invoice_total_pirce}
-                </td>
-                <td className="px-4 py-2"></td>
-              </tr>
-            </tbody>
-
-            {/* adding some space between invoice total and Invoice Totals after discount  */}
-
-            <tbody className="h-10 bg-white ">
-              <tr className="">
-                <td className="px-4 py-2 text-md font-primaryRegular"></td>
-                <td className="px-4 py-2"></td>
-                <td className="px-4 py-2 font-medium"></td>
-                <td className="px-4 py-2"></td>
-                <td className="px-4 py-2 font-medium"></td>
-              </tr>
-            </tbody>
-
-            {/* Invoice Totals after discount */}
-
-            <tbody className="h-8 bg-gray-200 mt-10 pt-2">
-              <tr className="">
-                <td className="px-4 w-[200px] py-2 text-md font-primaryRegular">
-                  نرخی کۆتایی
-                </td>
-                <td className="px-4 py-2"></td>
-                <td className="px-4 py-2 font-medium"></td>
-                <td className="px-4 py-2"></td>
-                <td className="px-4 py-2"></td>
-                <td className="px-4 py-2 text-center">
-                  ${invoice.invoice_total_pirce}
-                </td>
-                <td className="px-4 py-2 font-medium"></td>
-              </tr>
-            </tbody>
-          </table>
-        ) : (
-          <p>No invoice found</p>
-        )}
-      </div>
-
-      {/* Print Button */}
-      <button
-        onClick={handlePrint}
-        className="flex  items-center font-primaryRegular text-lg mt-10 bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-900"
-      >
-        چاپکردن{" "}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="size-6"
+    <div className="flex flex-row justify-center">
+      <div className="div items-center min-w-[50%] max-w-[50%] mt-8 p-4">
+        {/* Invoice Content */}
+        <div
+          ref={printRef}
+          className="flex flex-col justify-center items-center border border-gray-400 rounded-md"
         >
-          <path
-            fillRule="evenodd"
-            d="M7.875 1.5C6.839 1.5 6 2.34 6 3.375v2.99c-.426.053-.851.11-1.274.174-1.454.218-2.476 1.483-2.476 2.917v6.294a3 3 0 0 0 3 3h.27l-.155 1.705A1.875 1.875 0 0 0 7.232 22.5h9.536a1.875 1.875 0 0 0 1.867-2.045l-.155-1.705h.27a3 3 0 0 0 3-3V9.456c0-1.434-1.022-2.7-2.476-2.917A48.716 48.716 0 0 0 18 6.366V3.375c0-1.036-.84-1.875-1.875-1.875h-8.25ZM16.5 6.205v-2.83A.375.375 0 0 0 16.125 3h-8.25a.375.375 0 0 0-.375.375v2.83a49.353 49.353 0 0 1 9 0Zm-.217 8.265c.178.018.317.16.333.337l.526 5.784a.375.375 0 0 1-.374.409H7.232a.375.375 0 0 1-.374-.409l.526-5.784a.373.373 0 0 1 .333-.337 41.741 41.741 0 0 1 8.566 0Zm.967-3.97a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H18a.75.75 0 0 1-.75-.75V10.5ZM15 9.75a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V10.5a.75.75 0 0 0-.75-.75H15Z"
-            clipRule="evenodd"
-          />
-        </svg>
-      </button>
+          <div className="relative flex flex-row justify-center items-center">
+            {/* Image */}
+            <img src={Logo} alt="Logo" className="h-80 w-full object-cover" />
+          </div>
+
+          {/* Invoice Details */}
+          {invoice ? (
+            <>
+              <table className="w-full border-collapse border border-gray-300">
+                {/* Table Header */}
+                <thead className="bg-gray-200 border-b-2 border-gray-300">
+                  <tr className="h-12">
+                    <th className=" p-2 text-right">#</th>
+                    <th className=" p-2 text-right">کاڵا</th>
+                    <th className=" p-2 text-right">بەروار</th>
+                    <th className=" p-2 text-right">عدد</th>
+                    <th className=" p-2 text-right">نرخ بە دینار</th>
+                    <th className=" p-2 text-right">نرخ بە دۆلار</th>
+                    <th className=" p-2 text-right">کۆی گشتی</th>
+                    <th className=" p-2 text-right">کڕیار</th>
+                  </tr>
+                </thead>
+
+                {/* Table Body */}
+                <tbody className="bg-white">
+                  <tr className="h-12">
+                    <td className="text-right p-2">1</td>
+                    <td className="text-right p-2">
+                      {invoice.products.product_name}
+                    </td>
+                    <td className="text-right p-2">
+                      {invoice.invoice_date
+                        ? new Date(invoice.invoice_date).toLocaleDateString(
+                            "en-CA"
+                          )
+                        : "N/A"}
+                    </td>
+                    <td className="text-right p-2">
+                      {invoice.invoice_quantity}
+                    </td>
+                    <td className="text-right p-2">
+                      IQD{Number(invoice.invoice_pirce).toLocaleString()}
+                    </td>
+                    <td className="text-right p-2">
+                      ${Number(invoice.invoice_pirce_dolar).toLocaleString()}
+                    </td>
+                    <td className="text-right p-2">
+                      IQD{Number(invoice.invoice_total_pirce).toLocaleString()}
+                    </td>
+                    <td className="text-right p-2">
+                      {invoice.invoice_customer}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div className="flex flex-row justify-between w-full bg-gray-200 h-12 p-2">
+                <span className="font-primaryRegular text-lg">
+                  کۆی گشی پسولە
+                </span>
+                <span className="font-primaryRegular text-lg"></span>
+                <span className="font-primaryRegular text-lg"></span>
+                <span className="font-primaryRegular pr-10 text-lg">
+                  {invoice.invoice_quantity}عدد
+                </span>
+                <span className="font-primaryRegular text-lg"></span>
+                <span className="font-primaryRegular text-lg"></span>
+                <span className="font-primaryRegular text-lg"></span>
+                <span className="pr-4 text-lg">
+                  {" "}
+                  IQD{Number(invoice.invoice_total_pirce).toLocaleString()}
+                </span>
+                <span className="font-primaryRegular text-lg"></span>
+                <span className="font-primaryRegular text-lg"></span>
+              </div>
+            </>
+          ) : (
+            <p>No invoice found</p>
+          )}
+        </div>
+
+        {/* Print Button */}
+        <button
+          onClick={handlePrint}
+          className="flex  items-center font-primaryRegular text-lg mt-10 bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-900"
+        >
+          چاپکردن{" "}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-6"
+          >
+            <path
+              fillRule="evenodd"
+              d="M7.875 1.5C6.839 1.5 6 2.34 6 3.375v2.99c-.426.053-.851.11-1.274.174-1.454.218-2.476 1.483-2.476 2.917v6.294a3 3 0 0 0 3 3h.27l-.155 1.705A1.875 1.875 0 0 0 7.232 22.5h9.536a1.875 1.875 0 0 0 1.867-2.045l-.155-1.705h.27a3 3 0 0 0 3-3V9.456c0-1.434-1.022-2.7-2.476-2.917A48.716 48.716 0 0 0 18 6.366V3.375c0-1.036-.84-1.875-1.875-1.875h-8.25ZM16.5 6.205v-2.83A.375.375 0 0 0 16.125 3h-8.25a.375.375 0 0 0-.375.375v2.83a49.353 49.353 0 0 1 9 0Zm-.217 8.265c.178.018.317.16.333.337l.526 5.784a.375.375 0 0 1-.374.409H7.232a.375.375 0 0 1-.374-.409l.526-5.784a.373.373 0 0 1 .333-.337 41.741 41.741 0 0 1 8.566 0Zm.967-3.97a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H18a.75.75 0 0 1-.75-.75V10.5ZM15 9.75a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V10.5a.75.75 0 0 0-.75-.75H15Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 };

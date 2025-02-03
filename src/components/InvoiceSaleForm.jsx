@@ -94,10 +94,16 @@ function InvoiceSaleForm() {
                   دانە
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
-                  نرخ
+                  نرخ بە دینار
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
-                  کۆی گشتی
+                  نرخ بە دۆلار
+                </th>
+                <th className="px-4 py-2 text-right font-primaryRegular">
+                  کۆی گشتی IQD
+                </th>
+                <th className="px-4 py-2 text-right font-primaryRegular">
+                  کۆی گشتی $
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
                   کڕیار
@@ -136,9 +142,21 @@ function InvoiceSaleForm() {
 
                     <td className="px-4 py-2">{invoices.invoice_quantity}</td>
 
-                    <td className="px-4 py-2">${invoices.invoice_pirce}</td>
                     <td className="px-4 py-2">
-                      ${invoices.invoice_total_pirce}
+                      IQD {Number(invoices.invoice_pirce).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      ${Number(invoices.invoice_pirce_dolar).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      IQD{" "}
+                      {Number(invoices.invoice_total_pirce).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      $
+                      {Number(
+                        invoices.invoice_total_pirce_dolar
+                      ).toLocaleString()}
                     </td>
                     <td className="px-4 py-2">{invoices.invoice_customer}</td>
                     <td className="px-4 py-2 flex justify-start space-x-2">

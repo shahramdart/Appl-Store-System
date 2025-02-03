@@ -6,6 +6,8 @@ const FormAddProduct = () => {
   const [name, setName] = useState("");
   const [color, setColor] = useState("");
   const [price, setPrice] = useState("");
+  const [product_price_dolar, setProductPriceDolar] = useState("");
+  const [exchangeRate, setExchangeRate] = useState("");
   const [qty, setQty] = useState("");
   const [brandId, setBrandId] = useState("");
   const [qrcode, setQrcode] = useState("");
@@ -53,6 +55,8 @@ const FormAddProduct = () => {
       product_name: name,
       product_color: color,
       product_price: price,
+      product_price_dolar: product_price_dolar,
+      exchangeRate: exchangeRate,
       product_qty: qty,
       brand_id: brandId,
       product_qrcode: qrcode,
@@ -118,7 +122,7 @@ const FormAddProduct = () => {
           <div className="mb-4 flex gap-4">
             <div className="w-1/2">
               <label htmlFor="price" className="block text-black mb-2">
-                نرخی کاڵا
+                نرخ بە دینار
               </label>
               <input
                 type="text"
@@ -126,10 +130,41 @@ const FormAddProduct = () => {
                 className="w-full p-3 rounded-md bg-white shadow-lg text-black border border-gray-300"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                placeholder="نرخی کاڵا"
+                placeholder="نرخی کاڵا بە دینار"
               />
             </div>
+            <div className="w-[25%]">
+              <label
+                htmlFor="product_price_dolar"
+                className="block text-black mb-2"
+              >
+                نرخ بە دۆلار
+              </label>
+              <input
+                type="text"
+                id="product_price_dolar"
+                className="w-full p-3 rounded-md bg-white shadow-lg text-black border border-gray-300"
+                value={product_price_dolar}
+                onChange={(e) => setProductPriceDolar(e.target.value)}
+                placeholder="نرخی کاڵا بە دۆلار"
+              />
+            </div>
+            <div className="w-1/2">
+              <label htmlFor="exchangeRate" className="block text-black mb-2">
+                نرخی ئەمڕۆی دۆلار
+              </label>
+              <input
+                type="text"
+                id="exchangeRate"
+                className="w-full p-3 rounded-md bg-white shadow-lg text-black border border-gray-300"
+                value={exchangeRate}
+                onChange={(e) => setExchangeRate(e.target.value)}
+                placeholder="نرخی دۆلار"
+              />
+            </div>
+          </div>
 
+          <div className="mb-4 flex gap-4">
             <div className="w-1/2">
               <label htmlFor="qty" className="block text-black mb-2">
                 عەدەدی کاڵا
@@ -143,9 +178,6 @@ const FormAddProduct = () => {
                 placeholder="عەدەدی کاڵا"
               />
             </div>
-          </div>
-
-          <div className="mb-4 flex gap-4">
             <div className="w-1/2">
               <label htmlFor="qrcode" className="block text-black mb-2">
                 باڕکۆدی کاڵا
@@ -159,6 +191,8 @@ const FormAddProduct = () => {
                 placeholder="باڕکۆدی کاڵا"
               />
             </div>
+          </div>
+          <div className="mb-4 flex gap-4">
             {/* Dropdowns */}
             <div className="w-1/2">
               <label htmlFor="category" className="block text-black mb-2">
@@ -178,8 +212,6 @@ const FormAddProduct = () => {
                 ))}
               </select>
             </div>
-          </div>
-          <div className="mb-4 flex gap-4">
             {/* Dropdowns */}
             <div className="w-1/2">
               <label htmlFor="category" className="block text-black mb-2">

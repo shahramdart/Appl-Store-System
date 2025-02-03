@@ -8,13 +8,11 @@ import { AiOutlineUser } from "react-icons/ai";
 import { IoLogOut, IoHome } from "react-icons/io5";
 import { FaCartShopping } from "react-icons/fa6";
 import { FaClipboardList } from "react-icons/fa6";
-import { CgPlayList } from "react-icons/cg";
-import { TbChecklist } from "react-icons/tb";
 import { MdBrandingWatermark } from "react-icons/md";
-import { HiClipboardList } from "react-icons/hi";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
 import { RiPlayList2Line } from "react-icons/ri";
-import { MdOutlineMoneyOff } from "react-icons/md";
+import { CiBarcode } from "react-icons/ci";
+import { PiBarcodeThin } from "react-icons/pi";
 
 import { LogOut, reset } from "../features/authSlice";
 
@@ -62,6 +60,11 @@ function SideBar({ children }) {
       name: "لیستی کڕین",
       link: "/expenses",
       icon: FaClipboardList,
+    },
+    {
+      name: "باڕکۆد",
+      link: "/barcode",
+      icon: PiBarcodeThin,
     },
     // {
     //   name: "لیستی قەرزەکان",

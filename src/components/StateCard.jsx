@@ -127,9 +127,19 @@ export default function StateCard() {
       <Card
         title="کۆی فرۆشتن"
         value={
-          sales?.totalSales === 0
-            ? "هیچ نەفرۆشراوە"
-            : `$${sales?.totalSales || 0.0}`
+          sales.totalSales?.total_price_dolar === 0
+            ? "0"
+            : `$${
+                Number(sales.totalSales?.total_price_dolar).toLocaleString() ||
+                0
+              }`
+        }
+        values={
+          sales.totalSales?.total_price === 0
+            ? "0"
+            : `IQD ${
+                Number(sales.totalSales?.total_price).toLocaleString() || 0
+              }`
         }
       />
 
@@ -137,13 +147,26 @@ export default function StateCard() {
         <>
           <Card
             title="کۆی کڕین"
-            value={
+            values={
               expenses.total === 0
                 ? "هیچ کڕینێک نیە"
-                : `$${expenses.total || 0}`
+                : `IQD${
+                    Number(
+                      expenses.totalExpenses?.total_purchase
+                    ).toLocaleString() || 0
+                  }`
+            }
+            value={
+              expenses.total === 0
+                ? "0"
+                : `$${
+                    Number(
+                      expenses.totalExpenses?.total_purchase_dolar
+                    ).toLocaleString() || 0
+                  }`
             }
           />
-          <Card title="کۆی قازانج" value={`$${profit?.total || 0}`} />
+          <Card title="کۆی قازانج" value={`IQD ${profit?.total || 0}`} />
         </>
       )}
 
@@ -155,7 +178,7 @@ export default function StateCard() {
   );
 }
 
-const Card = ({ title, value, pillText, trend, period }) => {
+const Card = ({ title, value, values, pillText, trend, period }) => {
   return (
     <div className="col-span-3 p-4 mt-6 rounded-lg border border-white shadow-lg">
       <div className="flex mb-8 items-center justify-between">
@@ -163,7 +186,8 @@ const Card = ({ title, value, pillText, trend, period }) => {
           <h3 className="text-gray-500 mb-2 text-xl font-primaryRegular">
             {title}
           </h3>
-          <p className="text-3xl font-semibold">{value}</p>
+          <p className="text-2xl font-semibold">{values}</p>
+          <p className="text-xl font-semibold">{value}</p>
         </div>
       </div>
       {period && <p className="text-sm text-gray-500">{period}</p>}

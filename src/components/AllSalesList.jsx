@@ -131,10 +131,16 @@ const AllSalesList = () => {
                   دانە
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
-                  نرخ
+                  نرخ بە دینار
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
-                  کۆی گشتی
+                  نرخ بە دۆلار
+                </th>
+                <th className="px-4 py-2 text-right font-primaryRegular">
+                  کۆی گشتی IQD
+                </th>
+                <th className="px-4 py-2 text-right font-primaryRegular">
+                  کۆی گشتی $
                 </th>
                 <th className="px-4 py-2 text-right font-primaryRegular">
                   قازانج
@@ -162,10 +168,23 @@ const AllSalesList = () => {
                         ? new Date(sale.createdAt).toLocaleDateString("en-CA")
                         : "N/A"}
                     </td>
+
                     <td className="px-4 py-2">{sale.quantity}</td>
-                    <td className="px-4 py-2">${sale.price}</td>
-                    <td className="px-4 py-2">${sale.total_price}</td>
-                    <td className="px-4 py-2">${sale.profit_amount}</td>
+                    <td className="px-4 py-2">
+                      ${Number(sale.price).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      ${Number(sale.price_dolar).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      IQD {Number(sale.total_price).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      ${Number(sale.total_price_dolar).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      IQD {Number(sale.profit_amount).toLocaleString()}
+                    </td>
                     <td className="px-4 py-2 flex justify-start space-x-2">
                       {sale?.id && (
                         <Link

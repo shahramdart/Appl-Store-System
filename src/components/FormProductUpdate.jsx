@@ -7,6 +7,7 @@ const UpdateProducts = () => {
   const [name, setName] = useState("");
   const [color, setColor] = useState("");
   const [price, setPrice] = useState("");
+  const [price_dolar, setPriceDolar] = useState("");
   const [qty, setQty] = useState("");
   const [qrcode, setQrcode] = useState("");
   const [categoryId, setCategoryId] = useState("");
