@@ -150,7 +150,7 @@ export default function StateCard() {
             values={
               expenses.total === 0
                 ? "هیچ کڕینێک نیە"
-                : `IQD${
+                : `IQD ${
                     Number(
                       expenses.totalExpenses?.total_purchase
                     ).toLocaleString() || 0
@@ -166,7 +166,10 @@ export default function StateCard() {
                   }`
             }
           />
-          <Card title="کۆی قازانج" value={`IQD ${profit?.total || 0}`} />
+          <Card
+            title="کۆی قازانج"
+            value={`IQD ${Number(profit?.total).toLocaleString() || 0}`}
+          />
         </>
       )}
 
