@@ -21,6 +21,10 @@ import Debt from "./pages/Debt";
 import DebtInvoice from "./pages/DebtInvoice";
 import SaleDebt from "./pages/SaleDebt";
 import BarcodeGenerator from "./pages/BarCodeGenerator";
+import CustomerInvoice from "./pages/CustomerInvoice";
+import CustomerInList from "./pages/Cusromer-In_List";
+import FormUpdateCategory from "./components/FormUpdateCategory";
+import UpdateBrand from "./pages/UpdateBrand";
 
 function App() {
   return (
@@ -34,17 +38,20 @@ function App() {
           <Route path="/users/add" element={<AddUser />} />
           <Route path="/users/update" element={<UpdateUser />} />
           <Route path="/category" element={<Category />} />
+          <Route path="/category/update" element={<FormUpdateCategory />} />
           <Route path="/category/add" element={<AddCategory />} />
           <Route path="/brands" element={<Brand />} />
           <Route path="/brand/add" element={<AddBrand />} />
+          <Route path="/brand/update" element={<UpdateBrand />} />
           <Route path="/allSale" element={<AllSales />} />
-          {/* <Route path="/allSale/view" element={<InvoiceList />} /> */}
+          <Route path="/customer" element={<CustomerInvoice />} />
+          <Route path="/customer/invoice" element={<CustomerInList />} />
+          <Route path="/invoice" element={<InvoiceSales />} />
           <Route path="/invoice/invoice-list" element={<InvoiceList />} />
+          <Route path="/dept" element={<Debt />} />
           <Route path="/debt/invoice-list" element={<DebtInvoice />} />
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/expenses/view" element={<Expenses />} />
-          <Route path="/dept" element={<Debt />} />
-          <Route path="/invoice" element={<InvoiceSales />} />
           <Route path="/sale" element={<Sale />} />
           <Route path="/saleDebt" element={<SaleDebt />} />
           <Route path="/products" element={<Products />} />

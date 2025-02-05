@@ -401,32 +401,29 @@ function SaleList() {
             <table className="min-w-full table-auto mt-12">
               <thead>
                 <tr className="text-slate-500">
-                  <th className="px-7 py-2 text-right font-primaryRegular">
-                    جۆری کاڵا
-                  </th>
-
-                  <th className="px-7 py-2 w-36 text-right font-primaryRegular">
+                  <th className="px-2 py-2 w-36 text-right font-primaryRegular">
                     ناو
                   </th>
-                  <th className="px-6 py-2 text-right font-primaryRegular">
+                  <th className="px-2 py-2 text-right font-primaryRegular">
                     عەدەد
                   </th>
-                  <th className="px-7 py-2 text-right font-primaryRegular">
-                    نرخ بە دینار
-                  </th>
-                  <th className="px-4 py-2 text-right font-primaryRegular">
-                    ناوی کڕیار
-                  </th>
-                  <th className="px-4 py-2 text-right font-primaryRegular">
-                    ناونیشان
-                  </th>
-                  <th className="px-4 py-2 text-right font-primaryRegular">
-                    ژ.موبایل
-                  </th>
-                  <th className="px-7 py-2 text-right font-primaryRegular">
+                  <th className="px-2 py-2 text-right font-primaryRegular">
                     نرخ بە دۆلار
                   </th>
-                  <th className="px-7 py-2 text-right font-primaryRegular">
+                  <th className="px-2 py-2 text-right font-primaryRegular">
+                    نرخ بە دینار
+                  </th>
+                  <th className="px-2 py-2 text-right font-primaryRegular">
+                    ناوی کڕیار
+                  </th>
+                  <th className="px-2 py-2 text-right font-primaryRegular">
+                    ناونیشان
+                  </th>
+                  <th className="px-2 py-2 text-right font-primaryRegular">
+                    ژ.موبایل
+                  </th>
+
+                  <th className="px-2 py-2 text-right font-primaryRegular">
                     تێبینی
                   </th>
                 </tr>
@@ -439,127 +436,256 @@ function SaleList() {
               <tbody>
                 {salesRecords.map((sale, index) => (
                   <tr key={index} className="text-gray-900">
-                    <td className="px-2 py-2 text-sm text-right">
-                      {sale.categoryName}
-                    </td>
-
                     <td className="px-2 py-2 w-48 text-sm text-right">
                       {sale.productName}
                     </td>
                     <td className="px-2 py-2 text-sm text-right">
-                      <input
-                        value={sale.quantity} // Ensure there's a default value in case quantity is undefined
-                        onChange={(e) =>
-                          handleInputChange(index, "quantity", e.target.value)
-                        }
-                        className="w-24 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
-                        type="number" // Ensure the input accepts only numbers
-                        min="1" // Ensure the minimum value is 1
-                      />
+                      {selectedProduct && selectedProduct.length === 0 ? (
+                        <input
+                          value={sale.quantity} // Ensure there's a default value in case quantity is undefined
+                          disabled
+                          onChange={(e) =>
+                            handleInputChange(index, "quantity", e.target.value)
+                          }
+                          className="w-24 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                          type="number" // Ensure the input accepts only numbers
+                          min="1" // Ensure the minimum value is 1
+                        />
+                      ) : (
+                        <input
+                          value={sale.quantity} // Ensure there's a default value in case quantity is undefined
+                          onChange={(e) =>
+                            handleInputChange(index, "quantity", e.target.value)
+                          }
+                          className="w-24 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                          type="number" // Ensure the input accepts only numbers
+                          min="1" // Ensure the minimum value is 1
+                        />
+                      )}
                     </td>
                     <td className="py-2 text-sm text-right">
                       <div className="flex flex-row items-center max-w-sm w-36">
-                        <div className="relative flex items-center">
-                          <input
-                            onChange={(e) =>
-                              handleInputChange(index, "price", e.target.value)
-                            }
-                            className="w-24 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
-                          />
-                          IQD
+                        {selectedProduct && selectedProduct.length === 0 ? (
+                          <div className="relative flex items-center">
+                            <input
+                              value={
+                                salesRecords[index]?.salling_price_dolar || ""
+                              }
+                              disabled
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "salling_price_dolar",
+                                  e.target.value
+                                )
+                              }
+                              className="w-32 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            />
+                            $
+                          </div>
+                        ) : (
+                          <div className="relative flex items-center">
+                            <input
+                              value={
+                                salesRecords[index]?.salling_price_dolar || ""
+                              }
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "salling_price_dolar",
+                                  e.target.value
+                                )
+                              }
+                              className="w-32 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            />
+                            $
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-2 text-sm text-right">
+                      <div className="flex flex-row items-center max-w-sm w-36">
+                        {selectedProduct && selectedProduct.length === 0 ? (
+                          <div className="relative flex items-center">
+                            <input
+                              disabled
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "price",
+                                  e.target.value
+                                )
+                              }
+                              className="w-24 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            />
+                            IQD
+                          </div>
+                        ) : (
+                          <div className="relative flex items-center">
+                            <input
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "price",
+                                  e.target.value
+                                )
+                              }
+                              className="w-24 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            />
+                            IQD
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-2 px-2 text-sm text-right">
+                      <div className="flex flex-row  items-start  w-36">
+                        <div className="relative flex items-start">
+                          {selectedProduct && selectedProduct.length === 0 ? (
+                            <input
+                              value={
+                                salesRecords[index]?.invoice_customer || ""
+                              }
+                              disabled
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "invoice_customer",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="ناوی کڕیار"
+                              className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            />
+                          ) : (
+                            <input
+                              value={
+                                salesRecords[index]?.invoice_customer || ""
+                              }
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "invoice_customer",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="ناوی کڕیار"
+                              className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-2 px-2 text-sm text-right">
+                      <div className="flex flex-row  items-start  w-36">
+                        <div className="relative flex items-start">
+                          {selectedProduct &&
+                          selectedProduct.product_qty === 0 ? (
+                            <input
+                              value={
+                                salesRecords[index]?.customer_address || ""
+                              }
+                              disabled
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "customer_address",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="ناونیشان"
+                              className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            />
+                          ) : (
+                            <input
+                              value={
+                                salesRecords[index]?.customer_address || ""
+                              }
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "customer_address",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="ناونیشان"
+                              className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-2 px-2 text-sm text-right">
+                      <div className="flex flex-row  items-start  w-36">
+                        <div className="relative flex items-start">
+                          {selectedProduct &&
+                          selectedProduct.product_qty === 0 ? (
+                            <input
+                              value={
+                                salesRecords[index]?.customer_phoneNo || ""
+                              }
+                              disabled
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "customer_phoneNo",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="ژ.موبایل"
+                              className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            />
+                          ) : (
+                            <input
+                              value={
+                                salesRecords[index]?.customer_phoneNo || ""
+                              }
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "customer_phoneNo",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="ژ.موبایل"
+                              className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            />
+                          )}
                         </div>
                       </div>
                     </td>
 
-                    <td className="py-2 px-2 text-sm text-right">
-                      <div className="flex flex-row  items-start  w-36">
-                        <div className="relative flex items-start">
-                          <input
-                            value={salesRecords[index]?.invoice_customer || ""}
-                            onChange={(e) =>
-                              handleInputChange(
-                                index,
-                                "invoice_customer",
-                                e.target.value
-                              )
-                            }
-                            placeholder="ناوی کڕیار"
-                            className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-2 px-2 text-sm text-right">
-                      <div className="flex flex-row  items-start  w-36">
-                        <div className="relative flex items-start">
-                          <input
-                            value={salesRecords[index]?.customer_address || ""}
-                            onChange={(e) =>
-                              handleInputChange(
-                                index,
-                                "customer_address",
-                                e.target.value
-                              )
-                            }
-                            placeholder="ناونیشان"
-                            className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-2 px-2 text-sm text-right">
-                      <div className="flex flex-row  items-start  w-36">
-                        <div className="relative flex items-start">
-                          <input
-                            value={salesRecords[index]?.customer_phoneNo || ""}
-                            onChange={(e) =>
-                              handleInputChange(
-                                index,
-                                "customer_phoneNo",
-                                e.target.value
-                              )
-                            }
-                            placeholder="ژ.موبایل"
-                            className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
-                          />
-                        </div>
-                      </div>
-                    </td>
                     <td className="py-2 text-sm text-right">
                       <div className="flex flex-row items-center max-w-sm w-36">
                         <div className="relative flex items-center">
-                          <input
-                            value={
-                              salesRecords[index]?.salling_price_dolar || ""
-                            }
-                            onChange={(e) =>
-                              handleInputChange(
-                                index,
-                                "salling_price_dolar",
-                                e.target.value
-                              )
-                            }
-                            className="w-24 bg-white text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
-                          />
-                          $
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-2 text-sm text-right">
-                      <div className="flex flex-row items-center max-w-sm w-36">
-                        <div className="relative flex items-center">
-                          <input
-                            value={salesRecords[index]?.description || ""}
-                            onChange={(e) =>
-                              handleInputChange(
-                                index,
-                                "description",
-                                e.target.value
-                              )
-                            }
-                            placeholder="تێبینی"
-                            className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
-                          />
+                          {selectedProduct &&
+                          selectedProduct.product_qty === 0 ? (
+                            <input
+                              value={salesRecords[index]?.description || ""}
+                              disabled
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "description",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="تێبینی"
+                              className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            />
+                          ) : (
+                            <input
+                              value={salesRecords[index]?.description || ""}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "description",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="تێبینی"
+                              className="w-36 bg-transparent font-primaryRegular text-slate-700 text-sm py-3 border-b-2 border-slate-200 focus:border-slate-500 focus:outline-none transition duration-300 ease rtl:text-right"
+                            />
+                          )}
                         </div>
                       </div>
                     </td>

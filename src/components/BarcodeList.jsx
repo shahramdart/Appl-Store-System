@@ -62,9 +62,9 @@ function BarcodeList() {
             <svg ref={barcodeRef} className="w-full h-auto"></svg>
             <button
               onClick={handlePrint}
-              className="mt-6 font-primaryRegular flex-row justify-center w-36 items-center rounded-md bg-slate-800 py-3 px-4 border border-transparent text-center text-lg text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="mt-6 font-primaryRegular flex-row justify-center w-36 items-center rounded-md bg-gray-700 py-3 px-4 border border-transparent text-center text-lg text-white transition-all shadow-md hover:shadow-lg focus:bg-gray-700 focus:shadow-none active:bg-gray-900 hover:bg-gray-900 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             >
-              Print Barcode
+              چاپکردن
             </button>
           </>
         )}
@@ -81,7 +81,7 @@ function BarcodeList() {
           />
           <button
             type="submit"
-            className="flex mt-12 font-primaryRegular flex-row justify-center w-36 items-center rounded-md bg-slate-800 py-3 px-4 border border-transparent text-center text-lg text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+            className="flex mt-12 font-primaryRegular flex-row justify-center w-36 items-center rounded-md bg-gray-700 py-3 px-4 border border-transparent text-center text-lg text-white transition-all shadow-md hover:shadow-lg  focus:shadow-none active:bg-gray-700 hover:bg-gray-900 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
           >
             بەرهەم هێنان
           </button>

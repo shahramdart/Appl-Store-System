@@ -56,7 +56,7 @@ const FormAddProduct = () => {
       product_color: color,
       product_price: price,
       product_price_dolar: product_price_dolar,
-      exchangeRate: exchangeRate,
+      exchangeRate: exchangeRate || 1500,
       product_qty: qty,
       brand_id: brandId,
       product_qrcode: qrcode,
@@ -81,7 +81,7 @@ const FormAddProduct = () => {
 
   return (
     <div className="p-6  min-h-screen overflow-hidden">
-      <h2 className="text-2xl font-bold text-white mt-4 mb-4">
+      <h2 className="text-2xl font-bold text-black mt-4 mb-4">
         زیادکردنی کاڵا
       </h2>
       <div className="bg-white border-white rounded-md p-6 shadow-2xl">
@@ -120,19 +120,6 @@ const FormAddProduct = () => {
             </div>
           </div>
           <div className="mb-4 flex gap-4">
-            <div className="w-1/2">
-              <label htmlFor="price" className="block text-black mb-2">
-                نرخ بە دینار
-              </label>
-              <input
-                type="text"
-                id="price"
-                className="w-full p-3 rounded-md bg-white shadow-lg text-black border border-gray-300"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder="نرخی کاڵا بە دینار"
-              />
-            </div>
             <div className="w-[25%]">
               <label
                 htmlFor="product_price_dolar"
@@ -149,7 +136,7 @@ const FormAddProduct = () => {
                 placeholder="نرخی کاڵا بە دۆلار"
               />
             </div>
-            <div className="w-1/2">
+            <div className="w-[25%]">
               <label htmlFor="exchangeRate" className="block text-black mb-2">
                 نرخی ئەمڕۆی دۆلار
               </label>
@@ -160,6 +147,19 @@ const FormAddProduct = () => {
                 value={exchangeRate}
                 onChange={(e) => setExchangeRate(e.target.value)}
                 placeholder="نرخی دۆلار"
+              />
+            </div>
+            <div className="w-1/2">
+              <label htmlFor="price" className="block text-black mb-2">
+                نرخ بە دینار
+              </label>
+              <input
+                type="text"
+                id="price"
+                className="w-full p-3 rounded-md bg-white shadow-lg text-black border border-gray-300"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="نرخی کاڵا بە دینار"
               />
             </div>
           </div>
@@ -235,9 +235,9 @@ const FormAddProduct = () => {
 
           <button
             type="submit"
-            className="w-full bg-green-500 text-black p-2 rounded-md hover:bg-green-600"
+            className="w-full font-primaryRegular bg-gray-700 text-white text-xl p-2 rounded-md hover:bg-gray-900"
           >
-            Save
+            پاشەکەوت
           </button>
         </form>
       </div>

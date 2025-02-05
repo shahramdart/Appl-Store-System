@@ -110,7 +110,7 @@ const BrandList = () => {
                         </svg>
                       </Link> */}
                       <Link
-                        to="/brands/update"
+                        to="/brand/update"
                         state={{ id: brand.id }}
                         className="text-gray-400 px-2 py-1 ml-2 rounded hover:text-gray-900 transition"
                       >

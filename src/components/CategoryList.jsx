@@ -47,7 +47,7 @@ const CategoryList = () => {
         </h2>
         <div className="mb-4 flex items-center space-x-2">
           <Link
-            to={`/brand/add`}
+            to={`/category/add`}
             className="flex items-center bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-900"
           >
             <span className="ml-4 font-primaryRegular text-lg">

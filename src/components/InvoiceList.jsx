@@ -19,12 +19,12 @@ const InvoiceLists = () => {
     }
   }, [invoiceId]);
 
-  const getInvoiceDetails = async (customerName) => {
+  const getInvoiceDetails = async (id) => {
     setLoading(true);
     setError(null);
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/invoice/${customerName}`
+        `http://localhost:4000/api/invoices/${id}`
       );
       setInvoice(response.data);
     } catch (err) {
@@ -41,7 +41,7 @@ const InvoiceLists = () => {
     const originalTitle = document.title;
 
     // Set new title for the print preview
-    document.title = "Code Crafted";
+    document.title = "BAKO PHONE";
     const now = new Date();
     const formattedDate = now.toLocaleDateString(); // e.g., "1/17/2025"
     const formattedTime = now.toLocaleTimeString(); // e.g., "10:34 AM"
@@ -49,8 +49,8 @@ const InvoiceLists = () => {
     // Open print preview with right-aligned content
     const printContents = `
       <div style="text-align: right; direction: rtl; margin: 20px;">
-        <header style="text-align: center; font-size: 15px; margin-bottom: 20px;">
-          <strong>Code Craft</strong>
+        <header style="text-align: center; font-size: 15px; margin-bottom: 20px; font-family: "Times New Roman", Times, serif;">
+          <strong>BAKO PHONE</strong>
         </header>
           <div style="text-align: end; margin-bottom: 10px; font-size: 10px">
         <span>${formattedDate}  ${formattedTime}</span>
@@ -84,28 +84,32 @@ const InvoiceLists = () => {
           </div>
 
           {/* Invoice Details */}
-          {invoice && Array.isArray(invoice.products) ? (
+          {invoice ? (
             <>
               <table className="w-full border-collapse border border-gray-300">
                 {/* Table Header */}
                 <thead className="bg-gray-200 border-b-2 border-gray-300">
                   <tr className="h-12">
-                    <th className="p-2 text-right font-primaryRegular">#</th>
-                    <th className="p-2 text-right font-primaryRegular">کاڵا</th>
-                    <th className="p-2 text-right font-primaryRegular">
+                    <th className=" p-2 text-right font-primaryRegular">
+                      کڕیار
+                    </th>
+                    <th className=" p-2 text-right font-primaryRegular">
+                      کاڵا
+                    </th>
+                    <th className=" p-2 text-right font-primaryRegular">
                       بەروار
                     </th>
-                    <th className="p-2 text-right font-primaryRegular">عدد</th>
-                    <th className="p-2 text-right font-primaryRegular">
+                    <th className=" p-2 text-right font-primaryRegular">عدد</th>
+                    <th className=" p-2 text-right font-primaryRegular">
                       نرخ بە دینار
                     </th>
-                    <th className="p-2 text-right font-primaryRegular">
+                    <th className=" p-2 text-right font-primaryRegular">
                       نرخ بە دۆلار
                     </th>
-                    <th className="p-2 text-right font-primaryRegular">
+                    <th className=" p-2 text-right font-primaryRegular">
                       کۆی گشتی
                     </th>
-                    <th className="p-2 text-right font-primaryRegular">
+                    <th className=" p-2 text-right font-primaryRegular">
                       کڕیار
                     </th>
                   </tr>
@@ -113,39 +117,38 @@ const InvoiceLists = () => {
 
                 {/* Table Body */}
                 <tbody className="bg-white">
-                  {invoice.sales.map((product, index) => (
-                    <tr key={product.id} className="h-12">
-                      <td className="text-right p-2">{index + 1}</td>
-                      <td className="text-right p-2">{product.product_name}</td>
-                      <td className="text-right p-2">
-                        {invoice.invoice_date
-                          ? new Date(invoice.invoice_date).toLocaleDateString(
-                              "en-CA"
-                            )
-                          : "N/A"}
-                      </td>
-                      <td className="text-right p-2">
-                        {product.invoice_quantity}
-                      </td>
-                      <td className="text-right p-2">
-                        IQD{Number(product.invoice_price).toLocaleString()}
-                      </td>
-                      <td className="text-right p-2">
-                        ${Number(product.invoice_price_dolar).toLocaleString()}
-                      </td>
-                      <td className="text-right p-2">
-                        IQD
-                        {Number(product.invoice_total_price).toLocaleString()}
-                      </td>
-                      <td className="text-right p-2">
-                        {invoice.invoice_customer}
-                      </td>
-                    </tr>
-                  ))}
+                  <tr className="h-12">
+                    <td className="text-right p-2">
+                      {invoice.invoice_customer}
+                    </td>
+                    <td className="text-right p-2">
+                      {invoice.products.product_name}
+                    </td>
+                    <td className="text-right p-2">
+                      {invoice.invoice_date
+                        ? new Date(invoice.invoice_date).toLocaleDateString(
+                            "en-CA"
+                          )
+                        : "N/A"}
+                    </td>
+                    <td className="text-right p-2">
+                      {invoice.invoice_quantity}
+                    </td>
+                    <td className="text-right p-2">
+                      IQD{Number(invoice.invoice_pirce).toLocaleString()}
+                    </td>
+                    <td className="text-right p-2">
+                      ${Number(invoice.invoice_pirce_dolar).toLocaleString()}
+                    </td>
+                    <td className="text-right p-2">
+                      IQD{Number(invoice.invoice_total_pirce).toLocaleString()}
+                    </td>
+                    <td className="text-right p-2">
+                      {invoice.invoice_customer}
+                    </td>
+                  </tr>
                 </tbody>
               </table>
-
-              {/* Invoice Summary */}
               <div className="flex flex-row justify-between w-full bg-gray-200 h-12 p-2">
                 <span className="font-primaryRegular text-lg">
                   کۆی گشی پسولە
@@ -155,25 +158,18 @@ const InvoiceLists = () => {
                 <span className="font-primaryRegular text-lg"></span>
                 <span className="font-primaryRegular text-lg"></span>
                 <span className="font-primaryRegular text-lg"></span>
-                <span className="font-primaryRegular pr-10 text-lg">
-                  {invoice.products.reduce(
-                    (total, product) => total + product.invoice_quantity,
-                    0
-                  )}
-                  عدد
+                <span className="font-primaryRegular text-lg"></span>
+                <span className="font-primaryRegular pr-4 text-lg">
+                  {invoice.invoice_quantity}عدد
                 </span>
                 <span className="font-primaryRegular text-lg"></span>
                 <span className="font-primaryRegular text-lg"></span>
                 <span className="font-primaryRegular text-lg"></span>
                 <span className="font-primaryRegular text-lg"></span>
-                <span className="pr-4 text-left text-lg">
-                  IQD
-                  {invoice.products
-                    .reduce(
-                      (total, product) => total + product.invoice_total_price,
-                      0
-                    )
-                    .toLocaleString()}
+                <span className="font-primaryRegular text-lg"></span>
+                <span className="pr-8 text-left text-lg">
+                  {" "}
+                  IQD{Number(invoice.invoice_total_pirce).toLocaleString()}
                 </span>
                 <span className="font-primaryRegular text-lg"></span>
                 <span className="font-primaryRegular text-lg"></span>

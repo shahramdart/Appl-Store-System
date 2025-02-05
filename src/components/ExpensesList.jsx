@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 const ExpensesList = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -56,10 +56,15 @@ const ExpensesList = () => {
             </option>
           ))}
         </select>
-        <button
-          className="text-gray-400 px-2 py-1 ml-2 rounded hover:text-gray-900 transition"
-          onClick={() => console.log("Print work")}
-        >
+        <button className="flex flex-row text-gray-400 px-2 py-1 ml-2 rounded hover:text-gray-900 transition">
+          <ReactHTMLTableToExcel
+            id="test-table-xls-button"
+            className="download-table-xls-button pl-2"
+            table="table-to-xls"
+            filename="tablexls"
+            sheet="tablexls"
+            buttonText="Excel"
+          />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -81,7 +86,7 @@ const ExpensesList = () => {
             هیچ کڕینێک نەدۆزراندن
           </p>
         ) : (
-          <table className="min-w-full table-auto ">
+          <table id="table-to-xls" className="min-w-full table-auto ">
             <thead>
               <tr className="text-black">
                 <th className=" px-4 py-2 text-right font-primaryRegular">
@@ -98,10 +103,16 @@ const ExpensesList = () => {
                   بەروار
                 </th>
                 <th className=" px-4 py-2 text-right font-primaryRegular">
-                  نرخ
+                  نرخ بە دینار
                 </th>
                 <th className=" px-4 py-2 text-right font-primaryRegular">
-                  کۆی گشتی
+                  نرخ بە دۆلار
+                </th>
+                <th className=" px-4 py-2 text-right font-primaryRegular">
+                  کۆی گشتی IQD
+                </th>
+                <th className=" px-4 py-2 text-right font-primaryRegular">
+                  کۆی گشتی $
                 </th>
                 <th className=" px-4 py-2 text-right font-primaryRegular">
                   لەلایەن
@@ -111,7 +122,7 @@ const ExpensesList = () => {
                 </th>
               </tr>
               <tr>
-                <td colSpan="8">
+                <td colSpan="9">
                   <hr className="h-0.25 bg-gray-700 my-2" />
                 </td>
               </tr>
@@ -133,9 +144,21 @@ const ExpensesList = () => {
                           )
                         : "N/A"}
                     </td>
-                    <td className=" px-4 py-2">${expenses.purchase_price}</td>
                     <td className=" px-4 py-2">
-                      {`$${expenses.total_purchase}`}
+                      IQD {Number(expenses.purchase_price).toLocaleString()}
+                    </td>
+                    <td className=" px-4 py-2">
+                      ${Number(expenses.purchase_price_dolar).toLocaleString()}
+                    </td>
+                    <td className=" px-4 py-2">
+                      {`IQD ${Number(
+                        expenses.total_purchase
+                      ).toLocaleString()}`}
+                    </td>
+                    <td className=" px-4 py-2">
+                      {`$${Number(
+                        expenses.total_purchase_dolar
+                      ).toLocaleString()}`}
                     </td>
                     <td className=" px-4 py-2">
                       {expenses.user_name || "N/A"}

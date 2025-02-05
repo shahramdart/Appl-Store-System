@@ -45,15 +45,21 @@ function SideBar({ children }) {
     { name: "جۆرەکان", link: "/category", icon: MdCategory },
     { name: "کاڵاکان", link: "/products", icon: FaList },
     {
-      name: "پسوولە",
+      name: "پسوولەکان",
       link: "/invoice",
       icon: FaFileInvoiceDollar,
       margin: true,
     },
     {
+      name: "پسوولەی کڕیار",
+      link: "/customer",
+      icon: FaFileInvoiceDollar,
+    },
+    {
       name: "لیستی فرۆشتن",
       link: "/allSale",
       icon: RiPlayList2Line,
+      margin: true,
     },
 
     {

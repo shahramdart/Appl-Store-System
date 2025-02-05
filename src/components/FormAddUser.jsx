@@ -81,7 +81,7 @@ const FormAddUser = () => {
   return (
     <div className="p-6 min-h-screen overflow-hidden bg-gray-100">
       <h2 className="text-3xl font-bold text-gray-800 mt-4 mb-6 text-center">
-        زیادکردنی کاڵا
+        زیادکردنی بەکارهێنەر
       </h2>
       <div className="bg-white rounded-md p-6 shadow-lg max-w-4xl mx-auto">
         <form onSubmit={saveUser}>
@@ -92,7 +92,7 @@ const FormAddUser = () => {
             <div>
               <label
                 htmlFor="name"
-                className="block font-primaryRegular text-black mb-2"
+                className="block text-lg font-primaryRegular text-black mb-2"
               >
                 ناوی بەکارهێنەر
               </label>
@@ -109,7 +109,7 @@ const FormAddUser = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block font-primaryRegular text-black mb-2"
+                className="block  text-lg font-primaryRegular text-black mb-2"
               >
                 ئیمەیڵ
               </label>
@@ -126,7 +126,7 @@ const FormAddUser = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block font-primaryRegular text-black mb-2"
+                className="block text-lg font-primaryRegular text-black mb-2"
               >
                 وشەی نهێنی
               </label>
@@ -143,7 +143,7 @@ const FormAddUser = () => {
             <div>
               <label
                 htmlFor="confirmePassword"
-                className="block font-primaryRegular text-black mb-2"
+                className="block text-lg font-primaryRegular text-black mb-2"
               >
                 وشەی نهێنی پشتڕاست بکەرەوە
               </label>
@@ -159,7 +159,7 @@ const FormAddUser = () => {
             <div>
               <label
                 htmlFor="userPhone"
-                className="block font-primaryRegular text-black mb-2"
+                className="block text-lg font-primaryRegular text-black mb-2"
               >
                 ژ.موبایل
               </label>
@@ -176,13 +176,13 @@ const FormAddUser = () => {
             <div>
               <label
                 htmlFor="category"
-                className="block font-primaryRegular text-black mb-2"
+                className="block text-lg font-primaryRegular text-black mb-2"
               >
                 دەسەڵات
               </label>
               <select
                 id="permissions"
-                className="peer w-[300px] bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-4 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
+                className="peer w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-4 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
                 value={selectedPermission}
                 onChange={(e) => setSelectedPermission(e.target.value)}
               >
@@ -200,122 +200,13 @@ const FormAddUser = () => {
 
           <button
             type="submit"
-            className="w-full bg-gray-700 font-primaryRegular text-white p-3 rounded-md hover:bg-gray-900 transition-all"
+            className="w-full text-xl bg-gray-700 font-primaryRegular text-white p-3 rounded-md hover:bg-gray-900 transition-all"
           >
-            هەڵگرتن
+            پاشەکەوت
           </button>
         </form>
       </div>
     </div>
-    // <div className="p-6 bg-white min-h-screen overflow-hidden">
-    //   <h2 className="text-2xl font-bold text-white mt-4 mb-4">Add User</h2>
-    //   <div className="bg-white rounded-md p-6 shadow-2xl">
-    //     <form onSubmit={saveUser}>
-    //       {msg && <p className="text-center text-red-500 mb-4">{msg}</p>}
-
-    //       <div className="mb-4 flex flex-row justify-center gap-4">
-    //         <div className="w-1/3">
-    //           <label htmlFor="name" className="block text-white mb-2">
-    //             Name
-    //           </label>
-    //           <input
-    //             type="text"
-    //             id="name"
-    //             className="peer w-[300px] bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-4 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
-    //             value={name}
-    //             onChange={(e) => setName(e.target.value)}
-    //             placeholder="Name"
-    //           />
-    //         </div>
-    //         <div className="w-1/3">
-    //           <label htmlFor="userPhone" className="block text-white mb-2">
-    //             Phone
-    //           </label>
-    //           <input
-    //             type="text"
-    //             id="userPhone"
-    //             className="peer w-[300px] bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-4 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
-    //             value={userPhone}
-    //             onChange={(e) => setUserPhone(e.target.value)}
-    //             placeholder="Phone"
-    //           />
-    //         </div>
-    //         <div className="w-1/3">
-    //           <label htmlFor="email" className="block text-white mb-2">
-    //             Email
-    //           </label>
-    //           <input
-    //             type="email"
-    //             id="email"
-    //             className="peer w-[300px] bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-4 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
-    //             value={email}
-    //             onChange={(e) => setEmail(e.target.value)}
-    //             placeholder="Email"
-    //           />
-    //         </div>
-    //       </div>
-
-    //       <div className="mb-4 flex gap-4">
-    //         <div className="w-1/3">
-    //           <label htmlFor="password" className="block text-white mb-2">
-    //             Password
-    //           </label>
-    //           <input
-    //             type="password"
-    //             id="password"
-    //             className="peer w-[300px] bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-4 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
-    //             value={password}
-    //             onChange={(e) => setPassword(e.target.value)}
-    //             placeholder="Password"
-    //           />
-    //         </div>
-    //         <div className="w-1/3">
-    //           <label
-    //             htmlFor="confirmPassword"
-    //             className="block text-white mb-2"
-    //           >
-    //             Confirm Password
-    //           </label>
-    //           <input
-    //             type="password"
-    //             id="confirmPassword"
-    //             className="peer w-[300px] bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-4 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
-    //             value={confirmPassword}
-    //             onChange={(e) => setConfirmPassword(e.target.value)}
-    //             placeholder="Confirm Password"
-    //           />
-    //         </div>
-    //         <div className="w-1/3">
-    //           <label htmlFor="permissions" className="block text-white mb-2">
-    //             Permission
-    //           </label>
-    //           <select
-    //             id="permissions"
-    //             className="peer w-[300px] bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-4 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow rtl:text-right"
-    //             value={selectedPermission}
-    //             onChange={(e) => setSelectedPermission(e.target.value)}
-    //           >
-    //             <option value="" disabled>
-    //               Select Permission
-    //             </option>
-    //             {permissions.map((permission) => (
-    //               <option key={permission.id} value={permission.permissions}>
-    //                 {permission.permissions}
-    //               </option>
-    //             ))}
-    //           </select>
-    //         </div>
-    //       </div>
-
-    //       <button
-    //         type="submit"
-    //         className="w-[300px] bg-gray-700  text-xl font-primaryRegular text-white p-2 rounded-md hover:bg-gray-900"
-    //       >
-    //         هەڵگرتن
-    //       </button>
-    //     </form>
-    //   </div>
-    // </div>
   );
 };
 

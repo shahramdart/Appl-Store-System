@@ -168,7 +168,10 @@ export default function StateCard() {
           />
           <Card
             title="کۆی قازانج"
-            value={`IQD ${Number(profit?.total).toLocaleString() || 0}`}
+            value=""
+            values={`IQD ${
+              profit.total === 0 ? "0" : Number(profit?.total).toLocaleString()
+            }`}
           />
         </>
       )}

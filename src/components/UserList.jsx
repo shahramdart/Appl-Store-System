@@ -77,16 +77,10 @@ const UserList = () => {
             {users.map((user, index) => (
               <React.Fragment key={user.id}>
                 <tr className="text-gray-900">
-                  <td className="text-black text-right px-4 py-2">
-                    {index + 1}
-                  </td>
-                  <td className="text-black text-right px-4 py-2">
-                    {user.name}
-                  </td>
-                  <td className="text-black text-right px-4 py-2">
-                    {user.email}
-                  </td>
-                  <td className="text-black text-right px-4 py-2">
+                  <td className="text-black text-right py-2">{index + 1}</td>
+                  <td className="text-black text-right py-2">{user.name}</td>
+                  <td className="text-black text-right py-2">{user.email}</td>
+                  <td className="text-black text-right py-2">
                     {user.permission.permissions}
                   </td>
                   <td>

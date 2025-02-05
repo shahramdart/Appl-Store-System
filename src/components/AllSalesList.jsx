@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 const AllSalesList = () => {
   const [sales, setSales] = useState([]);
@@ -59,7 +60,9 @@ const AllSalesList = () => {
         <h2 className="text-2xl text-gray-900 mb-6 font-primaryRegular">
           لیستی فرۆشتنەکان
         </h2>
-        <h2 className="text-2xl text-gray-900 mb-6">${profit.total}</h2>
+        <h2 className="text-2xl text-gray-900 mb-6">
+          IQD {Number(profit.total).toLocaleString()}
+        </h2>
       </div>
 
       {loading && (
@@ -84,10 +87,15 @@ const AllSalesList = () => {
           ))}
         </select>
 
-        <button
-          className="text-gray-400 px-2 py-1 ml-2 rounded hover:text-gray-900 transition"
-          onClick={() => console.log("Print work")}
-        >
+        <button className="flex flex-row text-gray-400 px-2 py-1 ml-2 rounded hover:text-gray-900 transition">
+          <ReactHTMLTableToExcel
+            id="test-table-xls-button"
+            className="download-table-xls-button pl-2"
+            table="table-to-xls"
+            filename="tablexls"
+            sheet="tablexls"
+            buttonText="Excel"
+          />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -109,124 +117,128 @@ const AllSalesList = () => {
             هیچ کاڵایەک نەفرۆشراوە
           </p>
         ) : (
-          <table className="min-w-full table-auto">
-            <thead>
-              <tr className="text-black">
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  جۆری کاڵا
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  بڕاند
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  ناو
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  لە لایەن
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  بەروار
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  دانە
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  نرخ بە دینار
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  نرخ بە دۆلار
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  کۆی گشتی IQD
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  کۆی گشتی $
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  قازانج
-                </th>
-                <th className="px-4 py-2 text-right font-primaryRegular">
-                  بینین
-                </th>
-              </tr>
-              <tr>
-                <td colSpan="8">
-                  <hr className="h-0.25 bg-gray-700" />
-                </td>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredSales.map((sale, index) => (
-                <React.Fragment key={sale.id}>
-                  <tr className="text-gray-900">
-                    <td className="px-4 py-2">{sale.category_name || "N/A"}</td>
-                    <td className="px-4 py-2">{sale.brand_name || "N/A"}</td>
-                    <td className="px-4 py-2">{sale.product_name}</td>
-                    <td className="px-4 py-2">{sale.user_name || "N/A"}</td>
-                    <td className="px-4 py-2">
-                      {sale.createdAt
-                        ? new Date(sale.createdAt).toLocaleDateString("en-CA")
-                        : "N/A"}
-                    </td>
+          <>
+            <table id="table-to-xls" className="min-w-full table-auto">
+              <thead>
+                <tr className="text-black">
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    جۆری کاڵا
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    بڕاند
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    ناو
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    لە لایەن
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    بەروار
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    دانە
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    نرخ بە دینار
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    نرخ بە دۆلار
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    کۆی گشتی IQD
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    کۆی گشتی $
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    قازانج
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    بینین
+                  </th>
+                </tr>
+                <tr>
+                  <td colSpan="8">
+                    <hr className="h-0.25 bg-gray-700" />
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredSales.map((sale, index) => (
+                  <React.Fragment key={sale.id}>
+                    <tr className="text-gray-900">
+                      <td className="px-4 py-2">
+                        {sale.category_name || "N/A"}
+                      </td>
+                      <td className="px-4 py-2">{sale.brand_name || "N/A"}</td>
+                      <td className="px-4 py-2">{sale.product_name}</td>
+                      <td className="px-4 py-2">{sale.user_name || "N/A"}</td>
+                      <td className="px-4 py-2">
+                        {sale.createdAt
+                          ? new Date(sale.createdAt).toLocaleDateString("en-CA")
+                          : "N/A"}
+                      </td>
 
-                    <td className="px-4 py-2">{sale.quantity}</td>
-                    <td className="px-4 py-2">
-                      ${Number(sale.price).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-2">
-                      ${Number(sale.price_dolar).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-2">
-                      IQD {Number(sale.total_price).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-2">
-                      ${Number(sale.total_price_dolar).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-2">
-                      IQD {Number(sale.profit_amount).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-2 flex justify-start space-x-2">
-                      {sale?.id && (
-                        <Link
-                          to="/invoice-list"
-                          state={{ id: sale.id }}
-                          className="text-gray-400  px-2 py-1 ml-2 rounded hover:text-gray-900 transition flex items-center"
-                          aria-label={`View details of sale ${sale.id}`}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="size-6"
+                      <td className="px-4 py-2">{sale.quantity}</td>
+                      <td className="px-4 py-2">
+                        ${Number(sale.price).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-2">
+                        ${Number(sale.price_dolar).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-2">
+                        IQD {Number(sale.total_price).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-2">
+                        ${Number(sale.total_price_dolar).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-2">
+                        IQD {Number(sale.profit_amount).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-2 flex justify-start space-x-2">
+                        {sale?.id && (
+                          <Link
+                            to="/invoice-list"
+                            state={{ id: sale.id }}
+                            className="text-gray-400  px-2 py-1 ml-2 rounded hover:text-gray-900 transition flex items-center"
+                            aria-label={`View details of sale ${sale.id}`}
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-                            />
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                            />
-                          </svg>
-                        </Link>
-                      )}
-                    </td>
-                  </tr>
-                  {index < filteredSales.length - 1 && (
-                    <tr>
-                      <td colSpan="8">
-                        <hr className="h-0.25 bg-gray-700 my-2" />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="size-6"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                              />
+                            </svg>
+                          </Link>
+                        )}
                       </td>
                     </tr>
-                  )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
+                    {index < filteredSales.length - 1 && (
+                      <tr>
+                        <td colSpan="8">
+                          <hr className="h-0.25 bg-gray-700 my-2" />
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
+          </>
         )}
       </div>
     </div>
