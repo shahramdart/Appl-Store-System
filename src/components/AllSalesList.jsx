@@ -87,7 +87,7 @@ const AllSalesList = () => {
           ))}
         </select>
 
-        <button className="flex flex-row text-gray-400 px-2 py-1 ml-2 rounded hover:text-gray-900 transition">
+        <div className="flex flex-row text-gray-400 px-2 py-1 ml-2 rounded hover:text-gray-900 transition">
           <ReactHTMLTableToExcel
             id="test-table-xls-button"
             className="download-table-xls-button pl-2"
@@ -108,7 +108,7 @@ const AllSalesList = () => {
               clipRule="evenodd"
             />
           </svg>
-        </button>
+        </div>
       </div>
 
       <div className="overflow-x-auto">
