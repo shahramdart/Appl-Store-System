@@ -43,7 +43,6 @@ const FormUpdateCategory = () => {
         `http://localhost:4000/api/categories/${id}`,
         categoryData
       );
-      console.log(res.data);
 
       navigate("/category"); // Redirect after success
     } catch (error) {

@@ -148,7 +148,7 @@ function SaleList() {
         );
 
         if (response.status >= 200 && response.status < 300) {
-          console.log("Sale data inserted successfully:", response.data);
+          console.log("Sale data inserted successfully:");
         } else {
           console.error("Error inserting sale data:", response.data);
         }
@@ -358,7 +358,6 @@ function SaleList() {
                   onChange={(e) => {
                     const selectedProductId = Number(e.target.value);
                     setProductId(selectedProductId);
-                    console.log("Selected Product ID:", selectedProductId);
                   }}
                 >
                   <option value="">هەموو کاڵاکان</option>

@@ -68,7 +68,6 @@ const FormAddProduct = () => {
         "http://localhost:4000/api/product",
         productData
       );
-      console.log("Response from server:", response); // Log the response
       navigate("/products");
     } catch (error) {
       if (error.response) {

@@ -30,7 +30,6 @@ const UserList = () => {
   // Function to delete a user
   const deleteUser = async (id) => {
     try {
-      console.log("Deleting user with ID:", id); // Check the ID being passed
       await axios.delete(`http://localhost:4000/api/users/${id}`);
       getUser(); // Refresh the user list
     } catch (error) {

@@ -19,7 +19,6 @@ const ProductList = () => {
     setError(null);
     try {
       const response = await axios.get("http://localhost:4000/api/users");
-
       setUsers(response.data);
     } catch (err) {
       setError("Error fetching users");

@@ -167,19 +167,25 @@ export default function StateCard() {
             }
           />
           <Card
+            title="کۆی کاڵاکان"
+            value=""
+            values={`${
+              !product.total || product.total === 0
+                ? "0"
+                : Number(product?.total).toLocaleString()
+            }`}
+          />
+          <Card
             title="کۆی قازانج"
             value=""
             values={`IQD ${
-              profit.total === 0 ? "0" : Number(profit?.total).toLocaleString()
+              !profit.total || profit.total === 0
+                ? "0"
+                : Number(profit?.total).toLocaleString()
             }`}
           />
         </>
       )}
-
-      <Card
-        title="کۆی کاڵا"
-        value={product.total === 0 ? "هیچ کاڵایەک نیە" : `${product.total}`}
-      />
     </>
   );
 }

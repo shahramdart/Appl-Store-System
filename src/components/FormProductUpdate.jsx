@@ -83,10 +83,6 @@ const UpdateProducts = () => {
       category_id: categoryId,
     };
 
-    console.log("Product Price in IQD:", price); // Check the IQD value
-    console.log("Product Price in USD:", price_dolar); // Check the USD value
-
-    console.log("Product data being sent:", productData); // Ensure the format is correct
 
     try {
       const response = await axios.put(
@@ -94,7 +90,6 @@ const UpdateProducts = () => {
         productData
       );
       navigate("/products");
-      console.log("Product updated:", response.data);
     } catch (error) {
       console.error("Error updating product:", error);
     }
