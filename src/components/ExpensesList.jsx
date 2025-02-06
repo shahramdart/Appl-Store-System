@@ -41,7 +41,7 @@ const ExpensesList = () => {
 
       {loading && <p className="text-white">Loading...</p>}
 
-      {/* Month filter input */}
+      {/* Month filter input sxdsd sd*/}
       <div className="mb-4 flex justify-between items-center">
         <select
           id="month"
