@@ -2,20 +2,27 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
+
 const ExpensesList = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(""); // State for selected month
+  const [totalIQD, setTotalIQD] = useState(0);
+  const [totalUSD, setTotalUSD] = useState(0);
 
   // Fetch all expenses data
   useEffect(() => {
     getExpenses();
   }, []);
 
+  useEffect(() => {
+    getTotalExpensesMonth();
+  }, [selectedMonth]);
+
   const getExpenses = async () => {
     setLoading(true);
-    setError(null); // Reset error state before making a request
+    setError(null);
     try {
       const response = await axios.get("http://localhost:4000/api/expenses");
       setExpenses(response.data);
@@ -27,11 +34,29 @@ const ExpensesList = () => {
     }
   };
 
+  const getTotalExpensesMonth = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/expenses/total?month=${selectedMonth}`
+      );
+      console.log("Total Expenses Response:", response.data);
+
+      // Extract values correctly
+      const { total_purchase, total_purchase_dolar } =
+        response.data.totalExpenses;
+
+      setTotalIQD(total_purchase || 0);
+      setTotalUSD(total_purchase_dolar || 0);
+    } catch (error) {
+      console.error("Error fetching total expenses:", error);
+    }
+  };
+
   // Filter Expenses by selected month
   const filteredExpenses = selectedMonth
     ? expenses.filter((expense) => {
         const expenseDate = new Date(expense.createdAt);
-        return expenseDate.getMonth() === parseInt(selectedMonth) - 1; // Match the month (0-indexed)
+        return expenseDate.getMonth() === parseInt(selectedMonth) - 1;
       })
     : expenses;
 
@@ -41,7 +66,7 @@ const ExpensesList = () => {
 
       {loading && <p className="text-white">Loading...</p>}
 
-      {/* Month filter input sxdsd sd*/}
+      {/* Month filter input */}
       <div className="mb-4 flex justify-between items-center">
         <select
           id="month"
@@ -61,22 +86,10 @@ const ExpensesList = () => {
             id="test-table-xls-button"
             className="download-table-xls-button pl-2"
             table="table-to-xls"
-            filename="tablexls"
-            sheet="tablexls"
+            filename="expenses"
+            sheet="expenses"
             buttonText="Excel"
           />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="size-6"
-          >
-            <path
-              fillRule="evenodd"
-              d="M7.875 1.5C6.839 1.5 6 2.34 6 3.375v2.99c-.426.053-.851.11-1.274.174-1.454.218-2.476 1.483-2.476 2.917v6.294a3 3 0 0 0 3 3h.27l-.155 1.705A1.875 1.875 0 0 0 7.232 22.5h9.536a1.875 1.875 0 0 0 1.867-2.045l-.155-1.705h.27a3 3 0 0 0 3-3V9.456c0-1.434-1.022-2.7-2.476-2.917A48.716 48.716 0 0 0 18 6.366V3.375c0-1.036-.84-1.875-1.875-1.875h-8.25ZM16.5 6.205v-2.83A.375.375 0 0 0 16.125 3h-8.25a.375.375 0 0 0-.375.375v2.83a49.353 49.353 0 0 1 9 0Zm-.217 8.265c.178.018.317.16.333.337l.526 5.784a.375.375 0 0 1-.374.409H7.232a.375.375 0 0 1-.374-.409l.526-5.784a.373.373 0 0 1 .333-.337 41.741 41.741 0 0 1 8.566 0Zm.967-3.97a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H18a.75.75 0 0 1-.75-.75V10.5ZM15 9.75a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V10.5a.75.75 0 0 0-.75-.75H15Z"
-              clipRule="evenodd"
-            />
-          </svg>
         </div>
       </div>
 
@@ -86,125 +99,122 @@ const ExpensesList = () => {
             هیچ کڕینێک نەدۆزراندن
           </p>
         ) : (
-          <table id="table-to-xls" className="min-w-full table-auto ">
-            <thead>
-              <tr className="text-black">
-                <th className=" px-4 py-2 text-right font-primaryRegular">
-                  جۆری کڕین
-                </th>
-                <th className=" px-4 py-2 text-right font-primaryRegular">
-                  دانە
-                </th>
-
-                <th className=" px-4 py-2 text-right font-primaryRegular">
-                  جۆر
-                </th>
-                <th className=" px-4 py-2 text-right font-primaryRegular">
-                  بەروار
-                </th>
-                <th className=" px-4 py-2 text-right font-primaryRegular">
-                  نرخ بە دینار
-                </th>
-                <th className=" px-4 py-2 text-right font-primaryRegular">
-                  نرخ بە دۆلار
-                </th>
-                <th className=" px-4 py-2 text-right font-primaryRegular">
-                  کۆی گشتی IQD
-                </th>
-                <th className=" px-4 py-2 text-right font-primaryRegular">
-                  کۆی گشتی $
-                </th>
-                <th className=" px-4 py-2 text-right font-primaryRegular">
-                  لەلایەن
-                </th>
-                <th className=" px-4 py-2 text-right font-primaryRegular">
-                  بینین
-                </th>
-              </tr>
-              <tr>
-                <td colSpan="9">
-                  <hr className="h-0.25 bg-gray-700 my-2" />
-                </td>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredExpenses.map((expenses, index) => (
-                <React.Fragment key={expenses.id}>
-                  <tr className="text-gray-900">
-                    <td className=" px-4 py-2">{expenses.product_name}</td>
-                    <td className=" px-4 py-2">{expenses.quantity}</td>
-                    <td className=" px-4 py-2">
-                      {expenses.category_name || "N/A"}
-                    </td>
-
-                    <td className=" px-4 py-2">
-                      {expenses.createdAt
-                        ? new Date(expenses.createdAt).toLocaleDateString(
-                            "en-CA"
-                          )
-                        : "N/A"}
-                    </td>
-                    <td className=" px-4 py-2">
-                      IQD {Number(expenses.purchase_price).toLocaleString()}
-                    </td>
-                    <td className=" px-4 py-2">
-                      ${Number(expenses.purchase_price_dolar).toLocaleString()}
-                    </td>
-                    <td className=" px-4 py-2">
-                      {`IQD ${Number(
-                        expenses.total_purchase
-                      ).toLocaleString()}`}
-                    </td>
-                    <td className=" px-4 py-2">
-                      {`$${Number(
-                        expenses.total_purchase_dolar
-                      ).toLocaleString()}`}
-                    </td>
-                    <td className=" px-4 py-2">
-                      {expenses.user_name || "N/A"}
-                    </td>
-                    <td className=" px-4 py-2 flex justify-start space-x-2">
-                      {expenses?.id && (
-                        <Link
-                          to="/expenses/view"
-                          state={{ id: expenses.id }}
-                          className="text-gray-400 px-2 py-1 ml-2 rounded hover:bg-gray-4900 transition"
-                          aria-label={`View details of expenses ${expenses.id}`}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="h-6 w-6"
+          <>
+            <table id="table-to-xls" className="min-w-full table-auto">
+              <thead>
+                <tr className="text-black">
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    جۆری کڕین
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    دانە
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    جۆر
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    بەروار
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    نرخ بە دینار
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    نرخ بە دۆلار
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    کۆی گشتی IQD
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    کۆی گشتی $
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    لەلایەن
+                  </th>
+                  <th className="px-4 py-2 text-right font-primaryRegular">
+                    بینین
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredExpenses.map((expense, index) => (
+                  <React.Fragment key={expense.id}>
+                    <tr className="text-gray-900">
+                      <td className="px-4 py-2">{expense.product_name}</td>
+                      <td className="px-4 py-2">{expense.quantity}</td>
+                      <td className="px-4 py-2">
+                        {expense.category_name || "N/A"}
+                      </td>
+                      <td className="px-4 py-2">
+                        {expense.createdAt
+                          ? new Date(expense.createdAt).toLocaleDateString(
+                              "en-CA"
+                            )
+                          : "N/A"}
+                      </td>
+                      <td className="px-4 py-2">
+                        IQD {Number(expense.purchase_price).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-2">
+                        ${Number(expense.purchase_price_dolar).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-2">
+                        {`IQD ${Number(
+                          expense.total_purchase
+                        ).toLocaleString()}`}
+                      </td>
+                      <td className="px-4 py-2">
+                        {`$${Number(
+                          expense.total_purchase_dolar
+                        ).toLocaleString()}`}
+                      </td>
+                      <td className="px-4 py-2">
+                        {expense.user_name || "N/A"}
+                      </td>
+                      <td className="px-4 py-2">
+                        {expense?.id && (
+                          <Link
+                            to="/expenses/view"
+                            state={{ id: expense.id }}
+                            className="text-gray-400 px-2 py-1 ml-2 rounded hover:bg-gray-4900 transition"
+                            aria-label={`View details of expense ${expense.id}`}
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-                            />
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                            />
-                          </svg>
-                        </Link>
-                      )}
-                    </td>
-                  </tr>
-                  {index < filteredExpenses.length - 1 && (
-                    <tr>
-                      <td colSpan="8">
-                        <hr className="h-0.25 bg-gray-700 my-2" />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="h-6 w-6"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                              />
+                            </svg>
+                          </Link>
+                        )}
                       </td>
                     </tr>
-                  )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="flex flex-row justify-between items-center px-4 ">
+              <p className="text-gray-900  font-primaryRegular">
+                کۆی گشتی کڕینەکان بە دینار: IQD {totalIQD.toLocaleString()}
+              </p>
+              <p className="text-gray-900 font-primaryRegular">
+                کۆی گشتی کڕینەکان بە دۆلار: ${totalUSD.toLocaleString()}
+              </p>
+            </div>
+          </>
         )}
       </div>
     </div>

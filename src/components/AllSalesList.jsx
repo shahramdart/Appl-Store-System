@@ -7,14 +7,21 @@ const AllSalesList = () => {
   const [sales, setSales] = useState([]);
   const [profit, setProfit] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [totalSales, setTotalSales] = useState({});
   const [error, setError] = useState(null);
+  const [totalIQD, setTotalIQD] = useState(0);
+  const [totalUSD, setTotalUSD] = useState(0);
+
   const [selectedMonth, setSelectedMonth] = useState(""); // State for selected month
 
-  // Fetch all sales data
   useEffect(() => {
     getSales();
-    getTotalProfit();
   }, []);
+  // Fetch all sales data
+  useEffect(() => {
+    getTotalProfit();
+    getTotalSales();
+  }, [selectedMonth]);
 
   const getSales = async () => {
     setLoading(true);
@@ -43,6 +50,24 @@ const AllSalesList = () => {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getTotalSales = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/sale/total?month=${selectedMonth}`
+      );
+      console.log("Total Expenses Response:", response.data);
+
+      // Extract values correctly
+      const { total_purchase, total_purchase_dolar } =
+        response.data.totalExpenses;
+
+      setTotalIQD(total_purchase || 0);
+      setTotalUSD(total_purchase_dolar || 0);
+    } catch (error) {
+      console.error("Error fetching total expenses:", error);
     }
   };
 
@@ -164,80 +189,85 @@ const AllSalesList = () => {
                   </td>
                 </tr>
               </thead>
-              <tbody>
-                {filteredSales.map((sale, index) => (
-                  <React.Fragment key={sale.id}>
-                    <tr className="text-gray-900">
-                      <td className="px-4 py-2">
-                        {sale.category_name || "N/A"}
-                      </td>
-                      <td className="px-4 py-2">{sale.brand_name || "N/A"}</td>
-                      <td className="px-4 py-2">{sale.product_name}</td>
-                      <td className="px-4 py-2">{sale.user_name || "N/A"}</td>
-                      <td className="px-4 py-2">
-                        {sale.createdAt
-                          ? new Date(sale.createdAt).toLocaleDateString("en-CA")
-                          : "N/A"}
-                      </td>
-
-                      <td className="px-4 py-2">{sale.quantity}</td>
-                      <td className="px-4 py-2">
-                        ${Number(sale.price).toLocaleString()}
-                      </td>
-                      <td className="px-4 py-2">
-                        ${Number(sale.price_dolar).toLocaleString()}
-                      </td>
-                      <td className="px-4 py-2">
-                        IQD {Number(sale.total_price).toLocaleString()}
-                      </td>
-                      <td className="px-4 py-2">
-                        ${Number(sale.total_price_dolar).toLocaleString()}
-                      </td>
-                      <td className="px-4 py-2">
-                        IQD {Number(sale.profit_amount).toLocaleString()}
-                      </td>
-                      <td className="px-4 py-2 flex justify-start space-x-2">
-                        {sale?.id && (
-                          <Link
-                            to="/invoice-list"
-                            state={{ id: sale.id }}
-                            className="text-gray-400  px-2 py-1 ml-2 rounded hover:text-gray-900 transition flex items-center"
-                            aria-label={`View details of sale ${sale.id}`}
+              {filteredSales.map((sale, index) => (
+                <tbody key={sale.id}>
+                  {" "}
+                  {/* Add key to tbody here */}
+                  <tr key={sale.id} className="text-gray-900">
+                    <td className="px-4 py-2">{sale.category_name || "N/A"}</td>
+                    <td className="px-4 py-2">{sale.brand_name || "N/A"}</td>
+                    <td className="px-4 py-2">{sale.product_name}</td>
+                    <td className="px-4 py-2">{sale.user_name || "N/A"}</td>
+                    <td className="px-4 py-2">
+                      {sale.createdAt
+                        ? new Date(sale.createdAt).toLocaleDateString("en-CA")
+                        : "N/A"}
+                    </td>
+                    <td className="px-4 py-2">{sale.quantity}</td>
+                    <td className="px-4 py-2">
+                      ${Number(sale.price).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      ${Number(sale.price_dolar).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      IQD {Number(sale.total_price).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      ${Number(sale.total_price_dolar).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      IQD {Number(sale.profit_amount).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2 flex justify-start space-x-2">
+                      {sale?.id && (
+                        <Link
+                          to="/invoice-list"
+                          state={{ id: sale.id }}
+                          className="text-gray-400  px-2 py-1 ml-2 rounded hover:text-gray-900 transition flex items-center"
+                          aria-label={`View details of sale ${sale.id}`}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="size-6"
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="size-6"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-                              />
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                              />
-                            </svg>
-                          </Link>
-                        )}
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                            />
+                          </svg>
+                        </Link>
+                      )}
+                    </td>
+                  </tr>
+                  {index < filteredSales.length - 1 && (
+                    <tr>
+                      <td colSpan="8">
+                        <hr className="h-0.25 bg-gray-700 my-2" />
                       </td>
                     </tr>
-                    {index < filteredSales.length - 1 && (
-                      <tr>
-                        <td colSpan="8">
-                          <hr className="h-0.25 bg-gray-700 my-2" />
-                        </td>
-                      </tr>
-                    )}
-                  </React.Fragment>
-                ))}
-              </tbody>
+                  )}
+                </tbody>
+              ))}
             </table>
+            <div className="flex flex-row justify-between items-center px-4 ">
+              <p className="text-gray-900  font-primaryRegular">
+                کۆی گشتی کڕینەکان بە دینار: IQD {totalIQD.toLocaleString()}
+              </p>
+              <p className="text-gray-900 font-primaryRegular">
+                کۆی گشتی کڕینەکان بە دۆلار: ${totalUSD.toLocaleString()}
+              </p>
+            </div>
           </>
         )}
       </div>
